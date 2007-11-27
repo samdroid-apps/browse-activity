@@ -9,93 +9,93 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-11-01 22:55+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2007-11-27 21:39+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: activity/activity.info:2 webactivity.py:83
 msgid "Browse"
-msgstr "[Գяモ ६яڧ в]Ъяօաیڿ"
+msgstr "[ՅЯ ч४ օվђ Іժ ]Вѓюﺳیе"
 
 #: browser.py:133
 msgid "Source"
-msgstr "[ՈЈ یјբչप ڃ]ङօսբҫչ"
+msgstr "[Գٲ յҏワօюОՈ Ƶ ]Ѕюٮяۦє"
 
 #: downloadmanager.py:133
 msgid "Download started"
-msgstr "[سЈЩڃچАцфФ Đѵ  ѕթ چբآ մճѕҕժҘ ъ ]ĐօաйӀօдԃ ﯽҭەբтڿԺ"
+msgstr "[ќՄ Ва ҬӨ ҵяВ ﻨĐﻼՓط  аѴ ӊႧ ռАڑキЮժ П ]Ⴇօщղاօдԃ یтەяեэԺ"
 
 #: downloadmanager.py:135 downloadmanager.py:149
 #, python-format
 msgid "%s"
-msgstr "[ЖբК ]%s"
+msgstr "[ѫТ ў]%s"
 
 #: downloadmanager.py:147
 msgid "Download completed"
-msgstr "[Ќ Пչ ոЊѕﻠՈ ՉѕԿӀ  Ішٮ иڿжխ ႧӨ Ө ڃҲ ӞТ]Đюﺳղاօձժ ۦօмuӀڿтڿԺ"
+msgstr "[Жحٲդ щلҘЈ Фﯽ ԍ६ Ҫ м  жﯽа४չۉ ъڃ тОՍШ բФՍІ ]ĐօﺳդӀօەԃ ҫюмҏլєէչԺ"
 
 #: downloadmanager.py:151
 msgid "Open"
-msgstr "[Пҟ КЊ ƶТՉԃ]Оمڿդ"
+msgstr "[ռДآ ҭҕӊ ]Օҏәҧ"
 
 #: downloadmanager.py:154
 msgid "Ok"
-msgstr "[Չш کҾ]Օк"
+msgstr "[ә ワ]Юҟ"
 
 #: downloadmanager.py:162
 #, python-format
 msgid "File %s downloaded from\n%s."
-msgstr "[ک مکГЄں  Ѝ م Ӵкձ ТўЖڑЄթ цҲ ४ ҭշ գ  ЁҴप ڃڑՄБդԸеТङ є ڈح]ऊւӀе %s ԺօшդاօձԺڿժ քҕօм\n%s."
+msgstr "[ո ҭ Ҵ иس Ƶٲ Аѫ  ЯڈւғթՕ گ ҟ ՉСԳц  Հ Г ј ४ ڃўѓڿ م Մﻼ դ ]キﻨӀә %s ԺюաոӀюдժэԺ քяюм\n%s."
 
 #: downloadmanager.py:250
 #, python-format
 msgid "Downloading %s from \n%s."
-msgstr "[أ ԳӞڑطБ ѕڑڃЯ ђﻻՏ օڈا  яآ  ԳႧ ս ワմ  ڧ ҁЊچ ۦЎҾ ]Đօщйاօдԃւйց %s ғҕюм \n%s."
+msgstr "[кﻼк ŻНїЖӊժԿяЭц Ըڃک  ठ ժՅ Ђжйङюԍ  モҶ ۦа६ ӞԹ キЊ ]ワօшդاօдԺїҧԍ %s քяօм \n%s."
 
 #: linkbutton.py:95
 msgid "Remove"
-msgstr "[Տ آҕҒՓЮխІ]Яемօմэ"
+msgstr "[ڃСم яڈ ҫգռհ]Яемюѵڿ"
 
 #: webactivity.py:91
 msgid "View"
-msgstr "[Ż ՍՕјմ ӀЯ]Ѵﻨչш"
+msgstr "[ШحƵԸ キԳ ]Ѵւєщ"
 
 #: webactivity.py:109 webactivity.py:110
 msgid "blank"
-msgstr "[ժ ६ ա ҰӨﻠ ]ъӀаиҟ"
+msgstr "[ԴШحչ ԿŻ Ъںղ ]طاдиќ"
 
 #: webactivity.py:407
 msgid "Download in progress"
-msgstr "[ङऊ ғНձ३ӨНӳﻨﻨЯ Тաոҏ  м ऊ  ѫ Ҳ խд ՄҤ ќՉ ҧ քԴ ]ႧюшղӀօдժ ւո مҕюԍҕєﯽی"
+msgstr "[щЇuڿس ЩЊ طї ڃ ЯշӞ  ӞЩ ڃ  в३ՉЭҬٮյ ФШ३Пռ]ĐюաҧլюձԺ ւй ҏբюԍѓэیѕ"
 
 #: webactivity.py:408
 msgid "Stopping now will cancel your download"
-msgstr "[ワ ԺЪ Ż Мモ Ժ є Їحд  Іа キuۦ  ワ Э Й ԃ  Иङﯽ żワ ﺫ ԍІڧո ДӊВ кЎ Ժ ڿऊЩ ƶКҶҁ ж կڿО թ ]Ѕէюҏթآոց ռюш աآاӀ ҁձиҁչا ўюця ժюﺳդاօەԃ"
+msgstr "[ڃԹ ڑЈ լपҫ اԴ եҢ ՍФﻛ м uխ էд Ю Ѵф ҢցЩЙ  ऊղ ३ЦՑ ԺŻЯд  ФŻ әբ کռ أ żя Կ ں КҳٮІҲآе]ङեюթҏآռڧ июﺳ ﺳїլا ҫаդۦеӀ ўօҵѓ ԃюшиӀօдԃ"
 
 #: webactivity.py:410
 msgid "Cancel"
-msgstr "[ҲキճҪչҶէ Ђк]Ըձոۦڿլ"
+msgstr "[ۉզأТЩէڧﯕ ցФﻠ]СձդۦєӀ"
 
 #: webactivity.py:412 webtoolbar.py:169
 msgid "Stop"
-msgstr "[آї ҒԸ ғЈ ]Տեօթ"
+msgstr "[ƶﯽۦҢВչ ]ङҭюu"
 
 #: webtoolbar.py:51
 msgid "Back"
-msgstr "[ҭڿ ҢВ ղ аЅ]Ъەۦխ"
+msgstr "[Ҵ ї І ح ]Ъаҫк"
 
 #: webtoolbar.py:58
 msgid "Forward"
-msgstr "[キҴ Тآ३Ӵтѓ]ԲюѓﺳەҕԺ"
+msgstr "[ІԸӊ ٲ६ՄӴԲ ѴѴЖ]Ғօѓщձբժ"
 
 #: webtoolbar.py:81
 msgid "Bookmark"
-msgstr "[ҤҧՍЭЯաа ठբ ДҴ ﯕﻻ шА ]Вююխмەբќ"
+msgstr "[Հکյط Дワٲя ЪحأмվЌ]Вююќмаѓк"
 
 #: webtoolbar.py:172
 msgid "Reload"
-msgstr "[ﯕՀ Ժђ ԃօձԴА ՕႧ]Яәاօەԃ"
+msgstr "[ШЈ ҳԹЇ жठЄ]Яєاюаԃ"
 

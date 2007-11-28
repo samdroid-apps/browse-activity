@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: web\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-11-01 22:55+0100\n"
-"PO-Revision-Date: 2007-11-24 14:01+0000\n"
+"PO-Revision-Date: 2007-11-28 11:57+0000\n"
 "Last-Translator: Gerhard Steiner <gerhard.steiner@duichwir.at>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -72,7 +72,7 @@ msgstr "Ansicht"
 
 #: webactivity.py:109 webactivity.py:110
 msgid "blank"
-msgstr "leer"
+msgstr "Leer"
 
 #: webactivity.py:407
 msgid "Download in progress"
@@ -80,7 +80,7 @@ msgstr "Herunterladen erfolgt gerade"
 
 #: webactivity.py:408
 msgid "Stopping now will cancel your download"
-msgstr "Jetzt stoppen wird das Herunterladen abbrechen."
+msgstr "Jetzt stoppen wird das Herunterladen abbrechen"
 
 #: webactivity.py:410
 msgid "Cancel"

@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-11-01 22:55+0100\n"
-"PO-Revision-Date: 2007-11-23 00:11+0000\n"
+"PO-Revision-Date: 2007-12-01 22:57+0000\n"
 "Last-Translator: Carlo Falciola <cfalciola@yahoo.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,9 @@ msgstr ""
 "X-Generator: Pootle 1.0.2\n"
 
 #: activity/activity.info:2 webactivity.py:83
+#, fuzzy
 msgid "Browse"
-msgstr ""
+msgstr "Naviga"
 
 #: browser.py:133
 msgid "Source"
@@ -26,7 +27,7 @@ msgstr "Sorgente"
 #: downloadmanager.py:133
 #, fuzzy
 msgid "Download started"
-msgstr "Iniziato scaricamento"
+msgstr "Iniziato trasferimento"
 
 #: downloadmanager.py:135 downloadmanager.py:149
 #, python-format
@@ -36,7 +37,7 @@ msgstr "%s"
 #: downloadmanager.py:147
 #, fuzzy
 msgid "Download completed"
-msgstr "Scaricamento terminato"
+msgstr "Trasferimento terminato"
 
 #: downloadmanager.py:151
 msgid "Open"
@@ -83,7 +84,7 @@ msgstr "spazio"
 #: webactivity.py:407
 #, fuzzy
 msgid "Download in progress"
-msgstr "Scaricamento in corso"
+msgstr "Trasferimento in corso"
 
 #: webactivity.py:408
 msgid "Stopping now will cancel your download"

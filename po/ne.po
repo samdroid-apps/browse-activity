@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-01 22:55+0100\n"
-"PO-Revision-Date: 2007-12-01 09:26+0000\n"
+"POT-Creation-Date: 2007-12-11 15:35+0000\n"
+"PO-Revision-Date: 2007-12-18 18:17+0000\n"
 "Last-Translator: Shankar Pokharel <memshankar@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -15,24 +15,24 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Pootle 1.0.2\n"
 
-#: activity/activity.info:2 webactivity.py:83
+#: activity/activity.info:2 webactivity.py:105
 msgid "Browse"
 msgstr "ब्राउज"
 
-#: browser.py:133
+#: browser.py:131
 msgid "Source"
 msgstr "श्रोत"
 
-#: downloadmanager.py:133
+#: downloadmanager.py:137
 msgid "Download started"
 msgstr "डाउनलोड शुरु भयो"
 
-#: downloadmanager.py:135 downloadmanager.py:149
+#: downloadmanager.py:139 downloadmanager.py:153
 #, python-format
 msgid "%s"
 msgstr "%s"
 
-#: downloadmanager.py:147
+#: downloadmanager.py:151
 msgid "Download completed"
 msgstr "डाउनलोड सकियो"
 
@@ -44,7 +44,7 @@ msgstr "खोल"
 msgid "Ok"
 msgstr "ठीक"
 
-#: downloadmanager.py:162
+#: downloadmanager.py:160
 #, python-format
 msgid ""
 "File %s downloaded from\n"
@@ -53,7 +53,7 @@ msgstr ""
 "फाइल %s निम्न श्रोतबाट डाउनलोड भयो \n"
 "%s."
 
-#: downloadmanager.py:250
+#: downloadmanager.py:231
 #, python-format
 msgid ""
 "Downloading %s from \n"
@@ -66,27 +66,27 @@ msgstr ""
 msgid "Remove"
 msgstr "हटाऊ"
 
-#: webactivity.py:91
+#: webactivity.py:113
 msgid "View"
 msgstr "दृश्य"
 
-#: webactivity.py:109 webactivity.py:110
+#: webactivity.py:131 webactivity.py:132
 msgid "blank"
 msgstr "खालि"
 
-#: webactivity.py:407
+#: webactivity.py:429
 msgid "Download in progress"
 msgstr "डाउनलोड हुँदैछ"
 
-#: webactivity.py:408
+#: webactivity.py:430
 msgid "Stopping now will cancel your download"
 msgstr "अहिले रोक्यौ भने डाउनलोड रद्द हुन्छ"
 
-#: webactivity.py:410
+#: webactivity.py:432
 msgid "Cancel"
 msgstr "रद्द गर"
 
-#: webactivity.py:412 webtoolbar.py:169
+#: webactivity.py:434 webtoolbar.py:169
 msgid "Stop"
 msgstr "रोक"
 
@@ -105,3 +105,23 @@ msgstr "चिनो राख"
 #: webtoolbar.py:172
 msgid "Reload"
 msgstr "फेरि खोल"
+
+#: viewtoolbar.py:34
+msgid "Zoom out"
+msgstr "सानो पार"
+
+#: viewtoolbar.py:40
+msgid "Zoom in"
+msgstr "ठूलो पार"
+
+#: viewtoolbar.py:51
+msgid "Fullscreen"
+msgstr "पूर्ण पर्दा"
+
+#: viewtoolbar.py:87
+msgid "Show Tray"
+msgstr "ट्रे देखाऊ"
+
+#: viewtoolbar.py:91
+msgid "Hide Tray"
+msgstr "ट्रे लुकाऊ"

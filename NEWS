@@ -1,3 +1,9 @@
+81
+
+* Use the new show_object_in_journal API of the base activity class
+  to show a downladed object or the view source one in the journal
+  #4909 (cscott)
+
 80
 
 * Update the progress of downloads less often #5449 (tomeu)

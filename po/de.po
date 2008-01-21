@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: web\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-01 22:55+0100\n"
-"PO-Revision-Date: 2007-12-10 08:22+0000\n"
+"POT-Creation-Date: 2007-12-21 06:27+0000\n"
+"PO-Revision-Date: 2007-12-21 10:32+0000\n"
 "Last-Translator: Gerhard Steiner <gerhard.steiner@duichwir.at>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -14,36 +14,36 @@ msgstr ""
 "X-Generator: Pootle 1.0.2\n"
 "X-Poedit-Language: German\n"
 
-#: activity/activity.info:2 webactivity.py:83
+#: activity/activity.info:2 webactivity.py:102
 msgid "Browse"
 msgstr "Durchsuchen"
 
-#: browser.py:133
+#: browser.py:131
 msgid "Source"
 msgstr "Quelle"
 
-#: downloadmanager.py:133
+#: downloadmanager.py:140
 msgid "Download started"
 msgstr "Herunterladen gestartet"
 
-#: downloadmanager.py:135 downloadmanager.py:149
+#: downloadmanager.py:142 downloadmanager.py:156
 #, python-format
 msgid "%s"
 msgstr "%s"
 
-#: downloadmanager.py:147
+#: downloadmanager.py:154
 msgid "Download completed"
-msgstr "Herunterladen fertig"
+msgstr "Herunterladen vollendet"
 
-#: downloadmanager.py:151
+#: downloadmanager.py:158
 msgid "Open"
 msgstr "Öffnen"
 
-#: downloadmanager.py:154
+#: downloadmanager.py:161
 msgid "Ok"
 msgstr "Ok"
 
-#: downloadmanager.py:162
+#: downloadmanager.py:160
 #, python-format
 msgid ""
 "File %s downloaded from\n"
@@ -52,7 +52,7 @@ msgstr ""
 "Datei %s heruntergeladen von\n"
 "%s."
 
-#: downloadmanager.py:250
+#: downloadmanager.py:243
 #, python-format
 #, python-format
 msgid ""
@@ -66,27 +66,27 @@ msgstr ""
 msgid "Remove"
 msgstr "Entfernen"
 
-#: webactivity.py:91
+#: webactivity.py:110
 msgid "View"
 msgstr "Ansicht"
 
-#: webactivity.py:109 webactivity.py:110
+#: webactivity.py:128 webactivity.py:129
 msgid "blank"
 msgstr "Leer"
 
-#: webactivity.py:407
+#: webactivity.py:438
 msgid "Download in progress"
 msgstr "Herunterladen erfolgt gerade"
 
-#: webactivity.py:408
+#: webactivity.py:439
 msgid "Stopping now will cancel your download"
 msgstr "Jetzt stoppen wird das Herunterladen abbrechen"
 
-#: webactivity.py:410
+#: webactivity.py:441
 msgid "Cancel"
 msgstr "Abbruch"
 
-#: webactivity.py:412 webtoolbar.py:169
+#: webactivity.py:443 webtoolbar.py:169
 msgid "Stop"
 msgstr "Stopp"
 
@@ -96,7 +96,7 @@ msgstr "Zurück"
 
 #: webtoolbar.py:58
 msgid "Forward"
-msgstr "Weiter"
+msgstr "Vorwärts"
 
 #: webtoolbar.py:81
 msgid "Bookmark"
@@ -113,5 +113,31 @@ msgstr "Neu laden"
 #~ "Herunterladen %s von\n"
 #~ "%s. Fortschritt %i%%."
 
+#, python-format
 #~ msgid "Web Activity"
 #~ msgstr "Web-Aktivität"
+
+#: viewtoolbar.py:34
+msgid "Zoom out"
+msgstr "Verkleinern"
+
+#: viewtoolbar.py:40
+msgid "Zoom in"
+msgstr "Vergrößern"
+
+#: viewtoolbar.py:51
+msgid "Fullscreen"
+msgstr "Ganzer Bildschirm"
+
+#: viewtoolbar.py:87
+msgid "Show Tray"
+msgstr "Ablage anzeigen"
+
+#: viewtoolbar.py:91
+msgid "Hide Tray"
+msgstr "Ablage verbergen"
+
+#: downloadmanager.py:167
+#, python-format
+msgid "File %s from %s."
+msgstr "Datei %s von %s."

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-11 15:35+0000\n"
-"PO-Revision-Date: 2007-12-11 17:41+0000\n"
+"POT-Creation-Date: 2007-12-21 06:27+0000\n"
+"PO-Revision-Date: 2007-12-21 09:04+0000\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: Traduc-fr <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Pootle 1.0.2\n"
 
-#: activity/activity.info:2 webactivity.py:105
+#: activity/activity.info:2 webactivity.py:102
 msgid "Browse"
 msgstr "Naviguer"
 
@@ -24,24 +24,24 @@ msgstr "Naviguer"
 msgid "Source"
 msgstr "Source"
 
-#: downloadmanager.py:137
+#: downloadmanager.py:140
 msgid "Download started"
 msgstr "Téléchargement amorcé"
 
-#: downloadmanager.py:139 downloadmanager.py:153
+#: downloadmanager.py:142 downloadmanager.py:156
 #, python-format
 msgid "%s"
 msgstr "%s"
 
-#: downloadmanager.py:151
+#: downloadmanager.py:154
 msgid "Download completed"
 msgstr "Téléchargement terminé"
 
-#: downloadmanager.py:151
+#: downloadmanager.py:158
 msgid "Open"
 msgstr "Ouvrir"
 
-#: downloadmanager.py:154
+#: downloadmanager.py:161
 msgid "Ok"
 msgstr "Accepter"
 
@@ -54,7 +54,7 @@ msgstr ""
 "Fichier %s téléchargé depuis\n"
 "%s."
 
-#: downloadmanager.py:231
+#: downloadmanager.py:243
 #, python-format
 #, python-format
 msgid ""
@@ -68,27 +68,27 @@ msgstr ""
 msgid "Remove"
 msgstr "Retirer"
 
-#: webactivity.py:113
+#: webactivity.py:110
 msgid "View"
 msgstr "Afficher"
 
-#: webactivity.py:131 webactivity.py:132
+#: webactivity.py:128 webactivity.py:129
 msgid "blank"
 msgstr "vide"
 
-#: webactivity.py:429
+#: webactivity.py:438
 msgid "Download in progress"
 msgstr "Téléchargement en cours"
 
-#: webactivity.py:430
+#: webactivity.py:439
 msgid "Stopping now will cancel your download"
 msgstr "Si vous arrêtez maintenant, votre téléchargement sera annulé"
 
-#: webactivity.py:432
+#: webactivity.py:441
 msgid "Cancel"
 msgstr "Annuler"
 
-#: webactivity.py:434 webtoolbar.py:169
+#: webactivity.py:443 webtoolbar.py:169
 msgid "Stop"
 msgstr "Arrêter"
 
@@ -115,6 +115,7 @@ msgstr "Recharger"
 #~ "Téléchargement de %s depuis \n"
 #~ "%s. Avancement %i%%."
 
+#, python-format
 #~ msgid "Web Activity"
 #~ msgstr "Activité : internet"
 
@@ -137,3 +138,8 @@ msgstr "Afficher la barre"
 #: viewtoolbar.py:91
 msgid "Hide Tray"
 msgstr "Masquer la barre"
+
+#: downloadmanager.py:167
+#, python-format
+msgid "File %s from %s."
+msgstr "Fichier %s de %s."

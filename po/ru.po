@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-01 22:55+0100\n"
-"PO-Revision-Date: 2007-11-24 11:38+0000\n"
+"POT-Creation-Date: 2007-12-21 06:27+0000\n"
+"PO-Revision-Date: 2007-12-22 10:29+0000\n"
 "Last-Translator: Maxim Osipov <maxim.osipov@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -15,36 +15,36 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Pootle 1.0.2\n"
 
-#: activity/activity.info:2 webactivity.py:83
+#: activity/activity.info:2 webactivity.py:102
 msgid "Browse"
 msgstr "Смотреть"
 
-#: browser.py:133
+#: browser.py:131
 msgid "Source"
 msgstr "Исходный код"
 
-#: downloadmanager.py:133
+#: downloadmanager.py:140
 msgid "Download started"
 msgstr "Загрузка началась"
 
-#: downloadmanager.py:135 downloadmanager.py:149
+#: downloadmanager.py:142 downloadmanager.py:156
 #, python-format
 msgid "%s"
 msgstr "%s"
 
-#: downloadmanager.py:147
+#: downloadmanager.py:154
 msgid "Download completed"
 msgstr "Загрузка завершена"
 
-#: downloadmanager.py:151
+#: downloadmanager.py:158
 msgid "Open"
 msgstr "Открыть"
 
-#: downloadmanager.py:154
+#: downloadmanager.py:161
 msgid "Ok"
 msgstr "Ok"
 
-#: downloadmanager.py:162
+#: downloadmanager.py:160
 #, python-format
 msgid ""
 "File %s downloaded from\n"
@@ -53,7 +53,7 @@ msgstr ""
 "Файлe %s загружен с\n"
 "%s."
 
-#: downloadmanager.py:250
+#: downloadmanager.py:243
 #, python-format
 msgid ""
 "Downloading %s from \n"
@@ -66,27 +66,27 @@ msgstr ""
 msgid "Remove"
 msgstr "Удалить"
 
-#: webactivity.py:91
+#: webactivity.py:110
 msgid "View"
 msgstr "Просмотреть"
 
-#: webactivity.py:109 webactivity.py:110
+#: webactivity.py:128 webactivity.py:129
 msgid "blank"
 msgstr "пусто"
 
-#: webactivity.py:407
+#: webactivity.py:438
 msgid "Download in progress"
 msgstr "Загрузка в процессе"
 
-#: webactivity.py:408
+#: webactivity.py:439
 msgid "Stopping now will cancel your download"
 msgstr "Прекращение отменит ваши загрузки"
 
-#: webactivity.py:410
+#: webactivity.py:441
 msgid "Cancel"
 msgstr "Отменить"
 
-#: webactivity.py:412 webtoolbar.py:169
+#: webactivity.py:443 webtoolbar.py:169
 msgid "Stop"
 msgstr "Остановить"
 
@@ -105,3 +105,28 @@ msgstr "Закладка"
 #: webtoolbar.py:172
 msgid "Reload"
 msgstr "Обновить"
+
+#: viewtoolbar.py:34
+msgid "Zoom out"
+msgstr "Увеличить масштаб"
+
+#: viewtoolbar.py:40
+msgid "Zoom in"
+msgstr "Уменьшить масштаб"
+
+#: viewtoolbar.py:51
+msgid "Fullscreen"
+msgstr "Во весь экран"
+
+#: viewtoolbar.py:87
+msgid "Show Tray"
+msgstr "Показать трей"
+
+#: viewtoolbar.py:91
+msgid "Hide Tray"
+msgstr "Спрятать трей"
+
+#: downloadmanager.py:167
+#, python-format
+msgid "File %s from %s."
+msgstr "Файл %s из %s."

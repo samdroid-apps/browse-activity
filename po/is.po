@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-01 22:55+0100\n"
+"POT-Creation-Date: 2007-12-21 06:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,36 +16,36 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Translate Toolkit 1.0.1\n"
 
-#: activity/activity.info:2 webactivity.py:83
+#: activity/activity.info:2 webactivity.py:102
 msgid "Browse"
 msgstr "Flakka"
 
-#: browser.py:133
+#: browser.py:131
 msgid "Source"
 msgstr ""
 
-#: downloadmanager.py:133
+#: downloadmanager.py:140
 msgid "Download started"
 msgstr "Byrjaður að sækja"
 
-#: downloadmanager.py:135 downloadmanager.py:149
+#: downloadmanager.py:142 downloadmanager.py:156
 #, python-format
 msgid "%s"
 msgstr "%s"
 
-#: downloadmanager.py:147
+#: downloadmanager.py:154
 msgid "Download completed"
 msgstr "Búinn að sækja"
 
-#: downloadmanager.py:151
+#: downloadmanager.py:158
 msgid "Open"
 msgstr "Opna"
 
-#: downloadmanager.py:154
+#: downloadmanager.py:161
 msgid "Ok"
 msgstr "Í lagi"
 
-#: downloadmanager.py:162
+#: downloadmanager.py:160
 #, python-format
 msgid ""
 "File %s downloaded from\n"
@@ -54,7 +54,7 @@ msgstr ""
 "Skrá % sótt frá\n"
 "%s."
 
-#: downloadmanager.py:250
+#: downloadmanager.py:243
 #, python-format
 msgid ""
 "Downloading %s from \n"
@@ -67,27 +67,27 @@ msgstr ""
 msgid "Remove"
 msgstr "Fjarlægja"
 
-#: webactivity.py:91
+#: webactivity.py:110
 msgid "View"
 msgstr "Sýna"
 
-#: webactivity.py:109 webactivity.py:110
+#: webactivity.py:128 webactivity.py:129
 msgid "blank"
 msgstr "tóm"
 
-#: webactivity.py:407
+#: webactivity.py:438
 msgid "Download in progress"
 msgstr "Er að sækja"
 
-#: webactivity.py:408
+#: webactivity.py:439
 msgid "Stopping now will cancel your download"
 msgstr "Að stoppa núna þýðir að þú hættir við að sækja"
 
-#: webactivity.py:410
+#: webactivity.py:441
 msgid "Cancel"
 msgstr "Hætta við"
 
-#: webactivity.py:412 webtoolbar.py:169
+#: webactivity.py:443 webtoolbar.py:169
 msgid "Stop"
 msgstr "Stopp"
 
@@ -106,3 +106,28 @@ msgstr "Bókmerki"
 #: webtoolbar.py:172
 msgid "Reload"
 msgstr "Endurhlaða"
+
+#: viewtoolbar.py:34
+msgid "Zoom out"
+msgstr ""
+
+#: viewtoolbar.py:40
+msgid "Zoom in"
+msgstr ""
+
+#: viewtoolbar.py:51
+msgid "Fullscreen"
+msgstr ""
+
+#: viewtoolbar.py:87
+msgid "Show Tray"
+msgstr ""
+
+#: viewtoolbar.py:91
+msgid "Hide Tray"
+msgstr ""
+
+#: downloadmanager.py:167
+#, python-format
+msgid "File %s from %s."
+msgstr ""

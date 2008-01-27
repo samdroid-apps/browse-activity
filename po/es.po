@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: web-activity\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-21 06:27+0000\n"
-"PO-Revision-Date: 2008-01-02 12:28+0000\n"
-"Last-Translator: Adric Net <adric@adric.net>\n"
+"PO-Revision-Date: 2008-01-18 16:36+0000\n"
+"Last-Translator: Reynaldo H. Verdejo Pinochet <reynaldo@opendot.cl>\n"
 "Language-Team: Fedora Spanish <fedora-trans-es@redhat.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,9 +22,8 @@ msgid "Browse"
 msgstr "Navegar"
 
 #: browser.py:131
-#, fuzzy
 msgid "Source"
-msgstr "Origen"
+msgstr "Fuente"
 
 #: downloadmanager.py:140
 msgid "Download started"
@@ -43,8 +42,8 @@ msgstr "Descarga terminada"
 msgid "Open"
 msgstr "Abrir"
 
+# I think we should always allow 'ok' to be used, almost every Spanish speaking person know its meaning.
 #: downloadmanager.py:161
-#, fuzzy
 msgid "Ok"
 msgstr "Ok"
 
@@ -139,23 +138,23 @@ msgstr "Refrescar"
 
 #: viewtoolbar.py:34
 msgid "Zoom out"
-msgstr ""
+msgstr "Alejarse"
 
 #: viewtoolbar.py:40
 msgid "Zoom in"
-msgstr ""
+msgstr "Acercarse"
 
 #: viewtoolbar.py:51
 msgid "Fullscreen"
-msgstr ""
+msgstr "Pantalla completa"
 
 #: viewtoolbar.py:87
 msgid "Show Tray"
-msgstr ""
+msgstr "Mostrar bandeja"
 
 #: viewtoolbar.py:91
 msgid "Hide Tray"
-msgstr ""
+msgstr "Esconder bandeja"
 
 #: downloadmanager.py:167
 #, python-format

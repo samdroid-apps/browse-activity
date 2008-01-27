@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-21 06:27+0000\n"
-"PO-Revision-Date: 2007-12-24 02:22+0000\n"
+"PO-Revision-Date: 2008-01-24 21:51-0500\n"
 "Last-Translator: Enkhzul <enkhzul@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -84,7 +84,7 @@ msgstr "Харагдац"
 
 #: webactivity.py:128 webactivity.py:129
 msgid "blank"
-msgstr ""
+msgstr "Хоосон"
 
 #: webactivity.py:438
 msgid "Download in progress"

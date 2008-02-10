@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-21 09:42+0100\n"
-"PO-Revision-Date: 2008-01-28 03:50-0500\n"
+"PO-Revision-Date: 2008-02-06 05:02-0500\n"
 "Last-Translator: Sohaib Obaidi <ebtihaj_obaidi@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -30,7 +30,7 @@ msgstr "بارگيرى پايين شروع شد"
 #: downloadmanager.py:142 downloadmanager.py:156
 #, python-format
 msgid "%s"
-msgstr "%"
+msgstr "%s"
 
 #: downloadmanager.py:154
 msgid "Download completed"
@@ -54,7 +54,9 @@ msgstr "%s فایل از %s."
 msgid ""
 "Downloading %s from \n"
 "%s."
-msgstr "در حال بارگیری پائین % از%."
+msgstr ""
+"در حال بارگیری پائین %s از \n"
+"%s."
 
 #: linkbutton.py:95
 msgid "Remove"

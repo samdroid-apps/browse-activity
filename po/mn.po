@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-21 06:27+0000\n"
+"POT-Creation-Date: 2007-12-21 09:42+0100\n"
 "PO-Revision-Date: 2008-01-24 21:51-0500\n"
 "Last-Translator: Enkhzul <enkhzul@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,7 +30,7 @@ msgstr "Татаж эхэлсэн"
 #: downloadmanager.py:142 downloadmanager.py:156
 #, python-format
 msgid "%s"
-msgstr "%д"
+msgstr "%s"
 
 #: downloadmanager.py:154
 msgid "Download completed"
@@ -42,8 +42,8 @@ msgid ""
 "File %s downloaded from\n"
 "%s."
 msgstr ""
-"Файл % нь \n"
-" %ээс татагдлаа."
+"Файл %s  \n"
+" %s татагдлаа."
 
 #: downloadmanager.py:243
 #, python-format
@@ -51,8 +51,8 @@ msgid ""
 "Downloading %s from \n"
 "%s."
 msgstr ""
-"%ийг \n"
-" %ээс татаж байна."
+"%s \n"
+" %s татаж байна."
 
 #: linkbutton.py:95
 msgid "Remove"
@@ -129,4 +129,4 @@ msgstr "Ok"
 #: downloadmanager.py:167
 #, python-format
 msgid "File %s from %s."
-msgstr "%-ээс % файл. "
+msgstr "%s %s файл. "

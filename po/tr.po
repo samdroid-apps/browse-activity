@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-21 09:42+0100\n"
-"PO-Revision-Date: 2008-09-12 07:45-0400\n"
+"PO-Revision-Date: 2008-09-26 06:27-0400\n"
 "Last-Translator: abdullah kocabas <abdullah.kocabas@abcdizustu.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 
 #: activity/activity.info:2 webactivity.py:102
 msgid "Browse"
-msgstr "Göz gezdiriniz"
+msgstr "İnternet Tarayıcısı"
 
 #: browser.py:131
 msgid "Source"
@@ -76,7 +76,7 @@ msgstr "sekmeyi gizleyiniz"
 
 #: webactivity.py:110
 msgid "View"
-msgstr "Görüntüleyiniz"
+msgstr "Görünüm"
 
 #: webactivity.py:128 webactivity.py:129
 msgid "blank"
@@ -92,11 +92,11 @@ msgstr "Durdurduğunuz anda indirme işlemi sona erer"
 
 #: webactivity.py:441
 msgid "Cancel"
-msgstr "İptal ediniz"
+msgstr "İptal "
 
 #: webactivity.py:443 webtoolbar.py:169
 msgid "Stop"
-msgstr "Durdurunuz"
+msgstr "Durdur"
 
 #: webtoolbar.py:51
 msgid "Back"
@@ -112,11 +112,11 @@ msgstr "sayfa işareti"
 
 #: webtoolbar.py:172
 msgid "Reload"
-msgstr "Yeniden yükleyiniz"
+msgstr "Yeniden yükle"
 
 #: downloadmanager.py:158
 msgid "Open"
-msgstr "Açınız"
+msgstr "Aç"
 
 #: downloadmanager.py:161
 msgid "Ok"

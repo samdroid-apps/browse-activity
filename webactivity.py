@@ -139,10 +139,10 @@ def _set_accept_languages():
     lang = lang.split('_')
 
     # e.g. es-uy, es
-    pref = lang[0] + "-" + lang[1].lower()  + ", " + lang[0]
-    
+    pref = lang[0] + "-" + lang[1].lower() + ", " + lang[0]
+
     #TODO set locale for webkit
-    
+
     logging.debug('LANG set')
 
 from browser import TabbedView
@@ -428,7 +428,7 @@ class WebActivity(activity.Activity):
                 self._tabbed_view.props.current_browser.zoom_out()
                 return True
             elif gtk.gdk.keyval_name(event.keyval) == "plus" \
-                     or gtk.gdk.keyval_name(event.keyval) == "equal" :
+                     or gtk.gdk.keyval_name(event.keyval) == "equal":
                 _logger.debug('keyboard: Zoom in')
                 self._tabbed_view.props.current_browser.zoom_in()
                 return True

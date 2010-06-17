@@ -65,9 +65,9 @@ class Model(gobject.GObject):
 
     def deserialize(self, data):
         self.data = cjson.decode(data)
-        if not self.data.has_key('shared_links'):
+        if 'shared_links' not in self.data:
             self.data['shared_links'] = []
-        if not self.data.has_key('deleted'):
+        if 'deleted' not in self.data:
             self.data['deleted'] = []
 
     def get_links_ids(self):

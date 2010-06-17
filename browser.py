@@ -38,6 +38,7 @@ from palettes import ContentInvoker
 
 _ZOOM_AMOUNT = 0.1
 
+
 class TabbedView(gtk.Notebook):
     __gtype_name__ = 'TabbedView'
 
@@ -51,9 +52,9 @@ class TabbedView(gtk.Notebook):
 
         self.props.show_border = False
         self.props.scrollable = True
-        
+
         self.new_tab()
-        
+
     def new_tab(self):
         browser = Browser()
         self._append_tab(browser)
@@ -72,7 +73,7 @@ class TabbedView(gtk.Notebook):
         if os.path.exists(TabbedView.USER_SHEET):
             settings.set_property('user-stylesheet-uri', 'file:///' +
                                    TabbedView.USER_SHEET)
-        
+
         self.append_page(browser, label)
         browser.show()
 
@@ -87,7 +88,8 @@ class TabbedView(gtk.Notebook):
     def _get_current_browser(self):
         return self.get_nth_page(self.get_current_page())
 
-    current_browser = gobject.property(type=object, getter=_get_current_browser)
+    current_browser = gobject.property(type=object,
+                                       getter=_get_current_browser)
 
     def get_session(self):
         tab_sessions = []
@@ -154,7 +156,8 @@ class TabLabel(gtk.HBox):
         self.emit('tab-close', self._browser)
 
     def __browser_is_setup_cb(self, browser):
-        browser.progress.connect('notify::location', self.__location_changed_cb)
+        browser.progress.connect('notify::location',
+                                 self.__location_changed_cb)
         browser.connect('notify::title', self.__title_changed_cb)
 
     #def __location_changed_cb(self, progress_listener, pspec):
@@ -178,7 +181,6 @@ class Browser(webkit.WebView):
         #self.history = HistoryListener()
         #self.progress = ProgressListener()
 
-        
     def load_uri(self, uri):
         pass
 
@@ -209,6 +211,7 @@ class Browser(webkit.WebView):
         #uri = self.web_navigation.currentURI
         #persist.saveURI(uri, self.doc_shell, None, None, None, local_file)
         pass
+
 
 class PopupDialog(gtk.Window):
     def __init__(self):

@@ -18,6 +18,7 @@
 
 import gobject
 
+
 class ProgressListener(gobject.GObject):
     _com_interfaces_ = interfaces.nsIWebProgressListener
 

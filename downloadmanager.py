@@ -235,7 +235,7 @@ class Download:
     def onProgressChange64(self, web_progress, request, cur_self_progress,
                            max_self_progress, cur_total_progress,
                            max_total_progress):
-        percent = (cur_self_progress  * 100) / max_self_progress
+        percent = (cur_self_progress * 100) / max_self_progress
 
         if (time.time() - self._last_update_time) < _MIN_TIME_UPDATE and \
            (percent - self._last_update_percent) < _MIN_PERCENT_UPDATE:
@@ -386,4 +386,4 @@ class _SaveLinkProgressListener(object):
 
     def onDataAvailable(self, request, context, inputStream, offset, count):
         self._external_listener.onDataAvailable(request, context, inputStream,
-                                                offset, count);
+                                                offset, count)

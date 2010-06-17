@@ -16,6 +16,7 @@
 
 import logging
 
+
 class SecurityDialogs:
     _com_interfaces_ = interfaces.nsIBadCertListener
 

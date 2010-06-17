@@ -19,6 +19,7 @@
 
 import logging
 
+
 def get_session(browser):
     session_history = browser.get_back_forward_list()
 
@@ -29,11 +30,11 @@ def get_session(browser):
 
 def set_session(browser, data):
     session_history = browser.get_back_forward_list()
-    
+
     _set_history(session_history, data)
 
     if data:
-        session_history.go_to_item(len(data) -1)
+        session_history.go_to_item(len(data) - 1)
     else:
         browser.load_uri('about:blank')
 
@@ -53,7 +54,7 @@ def _get_history(history):
 
 def _set_history(history, history_data):
     history.clear()
-    
+
     for entry_dict in history_data:
         logging.debug('entry_dict: %r' % entry_dict)
 

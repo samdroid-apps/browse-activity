@@ -29,6 +29,7 @@ from sugar.activity.activity import get_activity_root
 
 _temp_dirs_to_clean = []
 
+
 #TODO port to webkit
 def cleanup_temp_files():
     while _temp_dirs_to_clean:

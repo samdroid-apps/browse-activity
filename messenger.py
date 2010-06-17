@@ -42,10 +42,10 @@ class Messenger(ExportedGObject):
 
     def participant_change_cb(self, added, removed):
         _logger.debug('Participants change add=%s    rem=%s'
-                      %(added, removed))
+                      % (added, removed))
         for handle, bus_name in added:
             _logger.debug('Add member handle=%s  bus_name=%s'
-                          %(str(handle), str(bus_name)))
+                          % (str(handle), str(bus_name)))
             self.members.append(bus_name)
 
         for handle in removed:
@@ -63,17 +63,17 @@ class Messenger(ExportedGObject):
             self.bus_name = self.tube.get_unique_name()
             if self.is_initiator:
                 _logger.debug('Initialising a new shared browser, I am %s .'
-                              %self.tube.get_unique_name())
+                              % self.tube.get_unique_name())
             else:
                 # sync with other members
-                _logger.debug('Joined I am %s .'%self.bus_name)
+                _logger.debug('Joined I am %s .' % self.bus_name)
                 for member in self.members:
                     if member != self.bus_name:
-                        _logger.debug('Get info from %s' %member)
+                        _logger.debug('Get info from %s' % member)
                         self.tube.get_object(member, PATH).sync_with_members(
                             self.model.get_links_ids(), dbus_interface=IFACE,
                             reply_handler=self.reply_sync, error_handler=lambda
-                            e:self.error_sync(e, 'transfering file'))
+                            e: self.error_sync(e, 'transfering file'))
 
         self.entered = True
 
@@ -86,7 +86,7 @@ class Messenger(ExportedGObject):
                     link['owner'], link['thumb'], link['timestamp'])
 
     def error_sync(self, e, when):
-        _logger.error('Error %s: %s'%(when, e))
+        _logger.error('Error %s: %s' % (when, e))
 
     @dbus.service.method(dbus_interface=IFACE, in_signature='as',
                          out_signature='ass', sender_keyword='sender')
@@ -116,7 +116,7 @@ class Messenger(ExportedGObject):
     @dbus.service.signal(IFACE, signature='sssssd')
     def _add_link(self, url, title, color, owner, thumb, timestamp):
         '''Signal to send the link information (add)'''
-        _logger.debug('Add Link: %s '%url)
+        _logger.debug('Add Link: %s ' % url)
 
     def _add_link_receiver(self, url, title, color, owner, buf, timestamp,
                            sender=None):
@@ -125,4 +125,4 @@ class Messenger(ExportedGObject):
         if self.tube.self_handle != handle:
             thumb = base64.b64decode(buf)
             self.model.add_link(url, title, thumb, owner, color, timestamp)
-            _logger.debug('Added link: %s to linkbar.'%(url))
+            _logger.debug('Added link: %s to linkbar.' % (url))

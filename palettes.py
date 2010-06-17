@@ -79,7 +79,7 @@ class ContentInvoker(Invoker):
 
 
 class LinkPalette(Palette):
-    
+
     def __init__(self, browser, title, url, owner_document):
         Palette.__init__(self)
 

@@ -20,29 +20,31 @@
 import logging
 
 def get_session(browser):
-    session_history = browser.web_navigation.sessionHistory
+    session_history = browser.get_back_forward_list()
 
-    if session_history.count == 0:
+    if len(session_history) == 0:
         return ''
     return _get_history(session_history)
 
 
 def set_session(browser, data):
-    _set_history(browser.web_navigation.sessionHistory, data)
+    session_history = browser.get_back_forward_list()
+    
+    _set_history(session_history, data)
 
     if data:
-        browser.web_navigation.gotoIndex(len(data) - 1)
+        session_history.go_to_item(len(data) -1)
     else:
         browser.load_uri('about:blank')
 
 
 def _get_history(history):
-    logging.debug('%r' % history.count)
+    logging.debug('%r' % len(history))
     entries_dest = []
-    for i in range(0, history.count):
-        entry_orig = history.getEntryAtIndex(i, False)
-        entry_dest = {'url':    entry_orig.URI.spec,
-                      'title':  entry_orig.title}
+    for i in range(0, len(history)):
+        entry_orig = history.get_nth_item(i)
+        entry_dest = {'url':    entry_orig.props.uri,
+                      'title':  entry_orig.props.title}
 
         entries_dest.append(entry_dest)
 
@@ -50,21 +52,11 @@ def _get_history(history):
 
 
 def _set_history(history, history_data):
-    history_internal = history.queryInterface(interfaces.nsISHistoryInternal)
-
-    if history_internal.count > 0:
-        history_internal.purgeHistory(history_internal.count)
-
+    history.clear()
+    
     for entry_dict in history_data:
         logging.debug('entry_dict: %r' % entry_dict)
-        entry_class = components.classes[ \
-                "@mozilla.org/browser/session-history-entry;1"]
-        entry = entry_class.createInstance(interfaces.nsISHEntry)
 
-        io_service_class = components.classes[ \
-                "@mozilla.org/network/io-service;1"]
-        io_service = io_service_class.getService(interfaces.nsIIOService)
-        entry.setURI(io_service.newURI(entry_dict['url'], None, None))
-        entry.setTitle(entry_dict['title'])
+        entry = webkit.WebHistoryItem(entry_dict['url'], entry_dict['title'])
 
-        history_internal.addEntry(entry, True)
+        history.add_item(entry)

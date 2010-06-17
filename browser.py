@@ -31,6 +31,7 @@ from sugar import env
 from sugar.activity import activity
 from sugar.graphics import style
 
+import sessionstore
 from palettes import ContentInvoker
 #from sessionhistory import HistoryListener
 #from progresslistener import ProgressListener
@@ -171,21 +172,15 @@ class TabLabel(gtk.HBox):
 class Browser(webkit.WebView):
     __gtype_name__ = 'Browser'
 
-    __gsignals__ = {
-        'is-setup': (gobject.SIGNAL_RUN_FIRST,
-                  gobject.TYPE_NONE,
-                  ([]))
-    }
-
     def __init__(self):
         webkit.WebView.__init__(self)
 
         #self.history = HistoryListener()
         #self.progress = ProgressListener()
 
-    def do_setup(self):
-
-        self.emit('is-setup')
+        
+    def load_uri(self, uri):
+        pass
 
     def get_session(self):
         return sessionstore.get_session(self)

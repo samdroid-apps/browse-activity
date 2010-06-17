@@ -32,9 +32,7 @@ import cjson
 import gconf
 import locale
 
-# HACK: Needed by http://dev.sugarlabs.org/ticket/456
-import gnome
-gnome.init('Hulahop', '1.0')
+import webkit
 
 from sugar.activity import activity
 from sugar.graphics import style
@@ -128,12 +126,7 @@ def _seed_xs_cookie():
         _logger.debug('seed_xs_cookie: Updated cookie successfully')
 
 
-import hulahop
-hulahop.set_app_version(os.environ['SUGAR_BUNDLE_VERSION'])
-hulahop.startup(_profile_path)
-
-from xpcom import components
-
+#TODO set app version and profile path
 
 def _set_accept_languages():
     ''' Set intl.accept_languages based on the locale
@@ -147,10 +140,9 @@ def _set_accept_languages():
 
     # e.g. es-uy, es
     pref = lang[0] + "-" + lang[1].lower()  + ", " + lang[0]
-    cls = components.classes["@mozilla.org/preferences-service;1"]
-    prefService = cls.getService(components.interfaces.nsIPrefService)
-    branch = prefService.getBranch('')
-    branch.setCharPref('intl.accept_languages', pref)
+    
+    #TODO set locale for webkit
+    
     logging.debug('LANG set')
 
 from browser import TabbedView
@@ -185,12 +177,6 @@ class WebActivity(activity.Activity):
 
         _set_accept_languages()
         _seed_xs_cookie()
-
-        # don't pick up the sugar theme - use the native mozilla one instead
-        cls = components.classes['@mozilla.org/preferences-service;1']
-        pref_service = cls.getService(components.interfaces.nsIPrefService)
-        branch = pref_service.getBranch("mozilla.widget.")
-        branch.setBoolPref("disable-native-theme", True)
 
         self._primary_toolbar = PrimaryToolbar(self._tabbed_view, self)
         self._primary_toolbar.connect('add-link', self._link_add_button_cb)
@@ -452,24 +438,21 @@ class WebActivity(activity.Activity):
         ''' take screenshot and add link info to the model '''
 
         browser = self._tabbed_view.props.current_browser
-        uri = browser.progress.location
-        cls = components.classes['@mozilla.org/intl/texttosuburi;1']
-        texttosuburi = cls.getService(components.interfaces.nsITextToSubURI)
-        ui_uri = texttosuburi.unEscapeURIForUI(uri.originCharset, uri.spec)
+        uri = browser.props.uri
 
         for link in self.model.data['shared_links']:
-            if link['hash'] == sha.new(ui_uri).hexdigest():
+            if link['hash'] == sha.new(uri).hexdigest():
                 _logger.debug('_add_link: link exist already a=%s b=%s' %(
-                    link['hash'], sha.new(ui_uri).hexdigest()))
+                    link['hash'], sha.new(uri).hexdigest()))
                 return
         buf = self._get_screenshot()
         timestamp = time.time()
-        self.model.add_link(ui_uri, browser.props.title, buf,
+        self.model.add_link(uri, browser.props.title, buf,
                             profile.get_nick_name(),
                             profile.get_color().to_string(), timestamp)
 
         if self.messenger is not None:
-            self.messenger._add_link(ui_uri, browser.props.title,
+            self.messenger._add_link(uri, browser.props.title,
                                      profile.get_color().to_string(),
                                      profile.get_nick_name(),
                                      base64.b64encode(buf), timestamp)

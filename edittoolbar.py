@@ -18,9 +18,6 @@
 import gtk
 from gettext import gettext as _
 
-from xpcom import components
-from xpcom.components import interfaces
-
 from sugar.activity import activity
 from sugar.graphics import iconentry
 from sugar.graphics.toolbutton import ToolButton
@@ -29,7 +26,7 @@ from sugar.graphics import style
 
 class EditToolbar(activity.EditToolbar):
 
-    _com_interfaces_ = interfaces.nsIObserver
+    #_com_interfaces_ = interfaces.nsIObserver
 
     def __init__(self, act):
         activity.EditToolbar.__init__(self)

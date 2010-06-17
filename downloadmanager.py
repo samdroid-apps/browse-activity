@@ -24,12 +24,6 @@ import urlparse
 import urllib
 
 import gtk
-import hulahop
-import xpcom
-from xpcom.nsError import *
-from xpcom import components
-from xpcom.components import interfaces
-from xpcom.server.factory import Factory
 
 from sugar.datastore import datastore
 from sugar import profile
@@ -74,7 +68,7 @@ def remove_all_downloads():
 
 
 class HelperAppLauncherDialog:
-    _com_interfaces_ = interfaces.nsIHelperAppLauncherDialog
+    #_com_interfaces_ = interfaces.nsIHelperAppLauncherDialog
 
     def promptForSaveToFile(self, launcher, window_context,
                             default_file, suggested_file_extension,
@@ -111,14 +105,14 @@ class HelperAppLauncherDialog:
         return NS_OK
 
 
-components.registrar.registerFactory('{64355793-988d-40a5-ba8e-fcde78cac631}',
-                                     'Sugar Download Manager',
-                                     '@mozilla.org/helperapplauncherdialog;1',
-                                     Factory(HelperAppLauncherDialog))
+#components.registrar.registerFactory('{64355793-988d-40a5-ba8e-fcde78cac631}',
+#                                     'Sugar Download Manager',
+#                                     '@mozilla.org/helperapplauncherdialog;1',
+#                                     Factory(HelperAppLauncherDialog))
 
 
 class Download:
-    _com_interfaces_ = interfaces.nsITransfer
+    #_com_interfaces_ = interfaces.nsITransfer
 
     def init(self, source, target, display_name, mime_info, start_time,
              temp_file, cancelable):
@@ -297,10 +291,10 @@ class Download:
             _active_downloads.remove(self)
 
 
-components.registrar.registerFactory('{23c51569-e9a1-4a92-adeb-3723db82ef7c}',
-                                     'Sugar Download',
-                                     '@mozilla.org/transfer;1',
-                                     Factory(Download))
+#components.registrar.registerFactory('{23c51569-e9a1-4a92-adeb-3723db82ef7c}',
+#                                     'Sugar Download',
+#                                     '@mozilla.org/transfer;1',
+#                                     Factory(Download))
 
 
 def save_link(url, text, owner_document):
@@ -346,7 +340,7 @@ def _implements_interface(obj, interface):
 
 
 class _AuthPromptCallback(object):
-    _com_interfaces_ = interfaces.nsIInterfaceRequestor
+    #_com_interfaces_ = interfaces.nsIInterfaceRequestor
 
     def __init__(self, dom_window):
         self._dom_window = dom_window
@@ -360,7 +354,7 @@ class _AuthPromptCallback(object):
 
 
 class _SaveLinkProgressListener(object):
-    _com_interfaces_ = interfaces.nsIStreamListener
+    #_com_interfaces_ = interfaces.nsIStreamListener
 
     """ an object to proxy the data through to
     nsIExternalHelperAppService.doContent, which will wait for the appropriate

@@ -17,9 +17,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import gobject
-import xpcom
-from xpcom.components import interfaces
-
 
 class ProgressListener(gobject.GObject):
     _com_interfaces_ = interfaces.nsIWebProgressListener

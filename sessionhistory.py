@@ -22,8 +22,6 @@ from xpcom.components import interfaces
 
 
 class HistoryListener(gobject.GObject):
-    _com_interfaces_ = interfaces.nsISHistoryListener
-
     __gsignals__ = {
         'session-history-changed': (gobject.SIGNAL_RUN_FIRST,
                                     gobject.TYPE_NONE,
@@ -34,10 +32,6 @@ class HistoryListener(gobject.GObject):
 
     def __init__(self):
         gobject.GObject.__init__(self)
-
-        self._wrapped_self = xpcom.server.WrapObject( \
-                self, interfaces.nsISHistoryListener)
-        weak_ref = xpcom.client.WeakReference(self._wrapped_self)
 
     def setup(self, web_navigation):
         self._session_history = web_navigation.sessionHistory

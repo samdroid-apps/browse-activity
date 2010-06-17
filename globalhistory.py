@@ -16,17 +16,13 @@
 
 from datetime import datetime
 
-from xpcom import components
-from xpcom.components import interfaces
-from xpcom.server.factory import Factory
-
 import places
 
 
 class GlobalHistory:
-    _com_interfaces_ = interfaces.nsIGlobalHistory, \
-                       interfaces.nsIGlobalHistory2, \
-                       interfaces.nsIGlobalHistory3
+    #_com_interfaces_ = interfaces.nsIGlobalHistory, \
+    #                   interfaces.nsIGlobalHistory2, \
+    #                   interfaces.nsIGlobalHistory3
 
     cid = '{2a53cf28-c48e-4a01-ba18-3d3fef3e2985}'
     description = 'Sugar Global History'
@@ -74,7 +70,7 @@ class GlobalHistory:
             self._store.update_place(place)
 
 
-components.registrar.registerFactory(GlobalHistory.cid,
-                                     GlobalHistory.description,
-                                     '@mozilla.org/browser/global-history;2',
-                                     Factory(GlobalHistory))
+#components.registrar.registerFactory(GlobalHistory.cid,
+#                                     GlobalHistory.description,
+#                                     '@mozilla.org/browser/global-history;2',
+#                                     Factory(GlobalHistory))

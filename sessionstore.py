@@ -19,10 +19,6 @@
 
 import logging
 
-from xpcom import components
-from xpcom.components import interfaces
-
-
 def get_session(browser):
     session_history = browser.web_navigation.sessionHistory
 

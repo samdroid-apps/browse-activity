@@ -21,8 +21,6 @@ from gettext import gettext as _
 import gobject
 import gtk
 import pango
-from xpcom.components import interfaces
-from xpcom import components
 
 from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.menuitem import MenuItem

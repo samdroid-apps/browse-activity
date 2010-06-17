@@ -23,18 +23,13 @@ import re
 import gtk
 import hulahop
 
-import xpcom
-from xpcom import components
-from xpcom.components import interfaces
-from xpcom.server.factory import Factory
-
 from sugar.graphics.objectchooser import ObjectChooser
 from sugar.activity.activity import get_activity_root
 
 
 _temp_dirs_to_clean = []
 
-
+#TODO port to webkit
 def cleanup_temp_files():
     while _temp_dirs_to_clean:
         temp_dir = _temp_dirs_to_clean.pop()
@@ -46,7 +41,7 @@ def cleanup_temp_files():
 
 
 class FilePicker:
-    _com_interfaces_ = interfaces.nsIFilePicker
+    #_com_interfaces_ = interfaces.nsIFilePicker
 
     cid = '{57901c41-06cb-4b9e-8258-37323327b583}'
     description = 'Sugar File Picker'
@@ -148,11 +143,10 @@ class FilePicker:
         logging.warning('FilePicker.get_FileURL: UNIMPLEMENTED')
         return None
 
-
-components.registrar.registerFactory(FilePicker.cid,
-                                        FilePicker.description,
-                                        '@mozilla.org/filepicker;1',
-                                        Factory(FilePicker))
+#components.registrar.registerFactory(FilePicker.cid,
+#                                        FilePicker.description,
+#                                        '@mozilla.org/filepicker;1',
+#                                        Factory(FilePicker))
 
 
 def _basename_strip(jobject):

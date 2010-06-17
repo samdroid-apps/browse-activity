@@ -23,12 +23,7 @@ from gettext import gettext as _
 
 import gobject
 import gtk
-import hulahop
-import xpcom
-from xpcom.nsError import *
-from xpcom import components
-from xpcom.components import interfaces
-from hulahop.webview import WebView
+import webkit
 
 from sugar.datastore import datastore
 from sugar import profile
@@ -36,65 +31,14 @@ from sugar import env
 from sugar.activity import activity
 from sugar.graphics import style
 
-import sessionstore
 from palettes import ContentInvoker
-from sessionhistory import HistoryListener
-from progresslistener import ProgressListener
+#from sessionhistory import HistoryListener
+#from progresslistener import ProgressListener
 
 _ZOOM_AMOUNT = 0.1
 
-
-class GetSourceListener(object):
-    _com_interfaces_ = interfaces.nsIWebProgressListener
-
-    def __init__(self, file_path, async_cb, async_err_cb):
-        self._file_path = file_path
-        self._async_cb = async_cb
-        self._async_err_cb = async_err_cb
-
-    def onStateChange(self, webProgress, request, stateFlags, status):
-        if stateFlags & interfaces.nsIWebProgressListener.STATE_IS_REQUEST and \
-                stateFlags & interfaces.nsIWebProgressListener.STATE_STOP:
-            self._async_cb(self._file_path)
-
-    def onProgressChange(self, progress, request, curSelfProgress,
-                         maxSelfProgress, curTotalProgress, maxTotalProgress):
-        pass
-
-    def onLocationChange(self, progress, request, location):
-        pass
-
-    def onStatusChange(self, progress, request, status, message):
-        pass
-
-    def onSecurityChange(self, progress, request, state):
-        pass
-
-
-class CommandListener(object):
-
-    _com_interfaces_ = interfaces.nsIDOMEventListener
-
-    def __init__(self, window):
-        self._window = window
-
-    def handleEvent(self, event):
-        if not event.isTrusted:
-            return
-
-        uri = event.originalTarget.ownerDocument.documentURI
-        if not uri.startswith('about:neterror?e=nssBadCert'):
-            return
-
-        cls = components.classes['@sugarlabs.org/add-cert-exception;1']
-        cert_exception = cls.createInstance(interfaces.hulahopAddCertException)
-        cert_exception.showDialog(self._window)
-
-
 class TabbedView(gtk.Notebook):
     __gtype_name__ = 'TabbedView'
-
-    _com_interfaces_ = interfaces.nsIWindowCreator
 
     AGENT_SHEET = os.path.join(activity.get_bundle_path(),
                                'agent-stylesheet.css')
@@ -106,67 +50,28 @@ class TabbedView(gtk.Notebook):
 
         self.props.show_border = False
         self.props.scrollable = True
-
-        io_service_class = components.classes[ \
-                "@mozilla.org/network/io-service;1"]
-        io_service = io_service_class.getService(interfaces.nsIIOService)
-
-        # Use xpcom to turn off "offline mode" detection, which disables
-        # access to localhost for no good reason.  (Trac #6250.)
-        io_service2 = io_service_class.getService(interfaces.nsIIOService2)
-        io_service2.manageOfflineStatus = False
-
-        cls = components.classes['@mozilla.org/content/style-sheet-service;1']
-        style_sheet_service = cls.getService(interfaces.nsIStyleSheetService)
-
-        if os.path.exists(TabbedView.AGENT_SHEET):
-            agent_sheet_uri = io_service.newURI('file:///' +
-                                                TabbedView.AGENT_SHEET,
-                                                None, None)
-            style_sheet_service.loadAndRegisterSheet(agent_sheet_uri,
-                    interfaces.nsIStyleSheetService.AGENT_SHEET)
-
-        if os.path.exists(TabbedView.USER_SHEET):
-            user_sheet_uri = io_service.newURI('file:///' + TabbedView.USER_SHEET,
-                                               None, None)
-            style_sheet_service.loadAndRegisterSheet(user_sheet_uri,
-                    interfaces.nsIStyleSheetService.USER_SHEET)
-
-        cls = components.classes['@mozilla.org/embedcomp/window-watcher;1']
-        window_watcher = cls.getService(interfaces.nsIWindowWatcher)
-        window_creator = xpcom.server.WrapObject(self,
-                                                 interfaces.nsIWindowCreator)
-        window_watcher.setWindowCreator(window_creator)
-
+        
+        self.new_tab()
+        
+    def new_tab(self):
         browser = Browser()
         self._append_tab(browser)
-
-    def createChromeWindow(self, parent, flags):
-        if flags & interfaces.nsIWebBrowserChrome.CHROME_OPENAS_CHROME:
-            dialog = PopupDialog()
-            dialog.view.is_chrome = True
-
-            parent_dom_window = parent.webBrowser.contentDOMWindow
-            parent_view = hulahop.get_view_for_window(parent_dom_window)
-            if parent_view:
-                dialog.set_transient_for(parent_view.get_toplevel())
-
-            browser = dialog.view.browser
-
-            item = browser.queryInterface(interfaces.nsIDocShellTreeItem)
-            item.itemType = interfaces.nsIDocShellTreeItem.typeChromeWrapper
-
-            return browser.containerWindow
-        else:
-            browser = Browser()
-            self._append_tab(browser)
-
-            return browser.browser.containerWindow
 
     def _append_tab(self, browser):
         label = TabLabel(browser)
         label.connect('tab-close', self.__tab_close_cb)
 
+        #set stylesheets
+        settings = browser.get_settings()
+
+        if os.path.exists(TabbedView.AGENT_SHEET):
+            # used to disable flash movies until you click them.
+            settings.set_property('user-stylesheet-uri', 'file:///' +
+                                   TabbedView.AGENT_SHEET)
+        if os.path.exists(TabbedView.USER_SHEET):
+            settings.set_property('user-stylesheet-uri', 'file:///' +
+                                   TabbedView.USER_SHEET)
+        
         self.append_page(browser, label)
         browser.show()
 
@@ -251,19 +156,19 @@ class TabLabel(gtk.HBox):
         browser.progress.connect('notify::location', self.__location_changed_cb)
         browser.connect('notify::title', self.__title_changed_cb)
 
-    def __location_changed_cb(self, progress_listener, pspec):
-        uri = progress_listener.location
-        cls = components.classes['@mozilla.org/intl/texttosuburi;1']
-        texttosuburi = cls.getService(interfaces.nsITextToSubURI)
-        ui_uri = texttosuburi.unEscapeURIForUI(uri.originCharset, uri.spec)
+    #def __location_changed_cb(self, progress_listener, pspec):
+    #    uri = progress_listener.location
+    #    cls = components.classes['@mozilla.org/intl/texttosuburi;1']
+    #    texttosuburi = cls.getService(interfaces.nsITextToSubURI)
+    #    ui_uri = texttosuburi.unEscapeURIForUI(uri.originCharset, uri.spec)
+    #
+    #    self._label.set_text(ui_uri)
 
-        self._label.set_text(ui_uri)
-
-    def __title_changed_cb(self, browser, pspec):
-        self._label.set_text(browser.props.title)
+    #def __title_changed_cb(self, browser, pspec):
+    #    self._label.set_text(browser.props.title)
 
 
-class Browser(WebView):
+class Browser(webkit.WebView):
     __gtype_name__ = 'Browser'
 
     __gsignals__ = {
@@ -273,30 +178,12 @@ class Browser(WebView):
     }
 
     def __init__(self):
-        WebView.__init__(self)
+        webkit.WebView.__init__(self)
 
-        self.history = HistoryListener()
-        self.progress = ProgressListener()
-
-        cls = components.classes["@mozilla.org/typeaheadfind;1"]
-        self.typeahead = cls.createInstance(interfaces.nsITypeAheadFind)
+        #self.history = HistoryListener()
+        #self.progress = ProgressListener()
 
     def do_setup(self):
-        WebView.do_setup(self)
-
-        listener = xpcom.server.WrapObject(ContentInvoker(self),
-                                           interfaces.nsIDOMEventListener)
-        self.window_root.addEventListener('click', listener, False)
-
-        listener = xpcom.server.WrapObject(CommandListener(self.dom_window),
-                                           interfaces.nsIDOMEventListener)
-        self.window_root.addEventListener('command', listener, False)
-
-        self.progress.setup(self)
-
-        self.history.setup(self.web_navigation)
-
-        self.typeahead.init(self.doc_shell)
 
         self.emit('is-setup')
 
@@ -307,42 +194,26 @@ class Browser(WebView):
         return sessionstore.set_session(self, data)
 
     def get_source(self, async_cb, async_err_cb):
-        cls = components.classes[ \
-                '@mozilla.org/embedding/browser/nsWebBrowserPersist;1']
-        persist = cls.createInstance(interfaces.nsIWebBrowserPersist)
-        # get the source from the cache
-        persist.persistFlags = \
-                interfaces.nsIWebBrowserPersist.PERSIST_FLAGS_FROM_CACHE
-
-        temp_path = os.path.join(activity.get_activity_root(), 'instance')
-        file_path = os.path.join(temp_path, '%i' % time.time())
-        cls = components.classes["@mozilla.org/file/local;1"]
-        local_file = cls.createInstance(interfaces.nsILocalFile)
-        local_file.initWithPath(file_path)
-
-        progresslistener = GetSourceListener(file_path, async_cb, async_err_cb)
-        persist.progressListener = xpcom.server.WrapObject(
-            progresslistener, interfaces.nsIWebProgressListener)
-
-        uri = self.web_navigation.currentURI
-        persist.saveURI(uri, self.doc_shell, None, None, None, local_file)
-
-    def zoom_in(self):
-        contentViewer = self.doc_shell.queryInterface( \
-                interfaces.nsIDocShell).contentViewer
-        if contentViewer is not None:
-            markupDocumentViewer = contentViewer.queryInterface( \
-                    interfaces.nsIMarkupDocumentViewer)
-            markupDocumentViewer.fullZoom += _ZOOM_AMOUNT
-
-    def zoom_out(self):
-        contentViewer = self.doc_shell.queryInterface( \
-                interfaces.nsIDocShell).contentViewer
-        if contentViewer is not None:
-            markupDocumentViewer = contentViewer.queryInterface( \
-                    interfaces.nsIMarkupDocumentViewer)
-            markupDocumentViewer.fullZoom -= _ZOOM_AMOUNT
-
+        #cls = components.classes[ \
+        #        '@mozilla.org/embedding/browser/nsWebBrowserPersist;1']
+        #persist = cls.createInstance(interfaces.nsIWebBrowserPersist)
+        ## get the source from the cache
+        #persist.persistFlags = \
+        #        interfaces.nsIWebBrowserPersist.PERSIST_FLAGS_FROM_CACHE
+        #
+        #temp_path = os.path.join(activity.get_activity_root(), 'instance')
+        #file_path = os.path.join(temp_path, '%i' % time.time())
+        #cls = components.classes["@mozilla.org/file/local;1"]
+        #local_file = cls.createInstance(interfaces.nsILocalFile)
+        #local_file.initWithPath(file_path)
+        #
+        #progresslistener = GetSourceListener(file_path, async_cb, async_err_cb)
+        #persist.progressListener = xpcom.server.WrapObject(
+        #    progresslistener, interfaces.nsIWebProgressListener)
+        #
+        #uri = self.web_navigation.currentURI
+        #persist.saveURI(uri, self.doc_shell, None, None, None, local_file)
+        pass
 
 class PopupDialog(gtk.Window):
     def __init__(self):

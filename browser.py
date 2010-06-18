@@ -178,13 +178,10 @@ class Browser(webkit.WebView):
     def __init__(self):
         webkit.WebView.__init__(self)
 
-        #self.history = HistoryListener()
-        #self.progress = ProgressListener()
-
     def load_uri(self, uri):
-        p_uri = urlparse.urlparse(uri)
-        if p_uri.schema == '' and p_uri.netloc == '':
-            return urlparse.urlparse(p_uri.path, 'http')
+        r = urlparse.urlparse(uri)
+        if r.schema == '' and r.netloc == '':
+            return urlparse.ParseResult('http', r.path, '', '', '', '').geturl()
         
         return uri
 

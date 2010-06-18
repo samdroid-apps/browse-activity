@@ -19,6 +19,7 @@
 import os
 import time
 import logging
+import urlparse
 from gettext import gettext as _
 
 import gobject
@@ -33,8 +34,6 @@ from sugar.graphics import style
 
 import sessionstore
 from palettes import ContentInvoker
-#from sessionhistory import HistoryListener
-#from progresslistener import ProgressListener
 
 _ZOOM_AMOUNT = 0.1
 
@@ -55,9 +54,10 @@ class TabbedView(gtk.Notebook):
 
         self.new_tab()
 
-    def new_tab(self):
+    def new_tab(self, uri=None):
         browser = Browser()
         self._append_tab(browser)
+        browser.load_uri(uri)
 
     def _append_tab(self, browser):
         label = TabLabel(browser)
@@ -73,6 +73,9 @@ class TabbedView(gtk.Notebook):
         if os.path.exists(TabbedView.USER_SHEET):
             settings.set_property('user-stylesheet-uri', 'file:///' +
                                    TabbedView.USER_SHEET)
+
+        # improves browsing on some buggy websites
+        settings.set_property('enable-site-specific-quirks', True)
 
         self.append_page(browser, label)
         browser.show()
@@ -133,7 +136,9 @@ class TabLabel(gtk.HBox):
         gobject.GObject.__init__(self)
 
         self._browser = browser
-        self._browser.connect('is-setup', self.__browser_is_setup_cb)
+        self._browser.connect('notify::load-status', self.__browser_is_setup_cb)
+        self._browser.connect('notify::title', self.__title_changed_cb)
+        self._browser.connect('notify::uri', self.__location_changed_cb)
 
         self._label = gtk.Label('')
         self.pack_start(self._label)
@@ -160,16 +165,11 @@ class TabLabel(gtk.HBox):
                                  self.__location_changed_cb)
         browser.connect('notify::title', self.__title_changed_cb)
 
-    #def __location_changed_cb(self, progress_listener, pspec):
-    #    uri = progress_listener.location
-    #    cls = components.classes['@mozilla.org/intl/texttosuburi;1']
-    #    texttosuburi = cls.getService(interfaces.nsITextToSubURI)
-    #    ui_uri = texttosuburi.unEscapeURIForUI(uri.originCharset, uri.spec)
-    #
-    #    self._label.set_text(ui_uri)
+    def __location_changed_cb(self, browser):
+        sefl._label.set_text(browser.props.uri)
 
-    #def __title_changed_cb(self, browser, pspec):
-    #    self._label.set_text(browser.props.title)
+    def __title_changed_cb(self, browser, pspec):
+        self._label.set_text(browser.props.title)
 
 
 class Browser(webkit.WebView):
@@ -182,7 +182,11 @@ class Browser(webkit.WebView):
         #self.progress = ProgressListener()
 
     def load_uri(self, uri):
-        pass
+        p_uri = urlparse.urlparse(uri)
+        if p_uri.schema == '' and p_uri.netloc == '':
+            return urlparse.urlparse(p_uri.path, 'http')
+        
+        return uri
 
     def get_session(self):
         return sessionstore.get_session(self)
@@ -223,7 +227,7 @@ class PopupDialog(gtk.Window):
         self.set_default_size(gtk.gdk.screen_width() - border * 2,
                               gtk.gdk.screen_height() - border * 2)
 
-        self.view = WebView()
+        self.view = webkit.WebView()
         self.view.connect('notify::visibility', self.__notify_visibility_cb)
         self.add(self.view)
         self.view.realize()

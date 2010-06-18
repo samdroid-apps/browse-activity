@@ -28,7 +28,6 @@ class Place(object):
         self.uri = uri
         self.title = None
         self.bookmark = False
-        self.gecko_flags = 0
         self.visits = 0
         self.last_visit = datetime.now()
 
@@ -50,7 +49,6 @@ class SqliteStore(object):
                                 uri         text,
                                 title       text,
                                 bookmark    boolean,
-                                gecko_flags integer,
                                 visits      integer,
                                 last_visit  timestamp
                               );
@@ -63,7 +61,7 @@ class SqliteStore(object):
 
         try:
             text = '%' + text + '%'
-            cursor.execute('select uri, title, bookmark, gecko_flags, ' \
+            cursor.execute('select uri, title, bookmark, ' \
                            'visits, last_visit from places ' \
                            'where uri like ? or title like ? ' \
                            'order by visits desc limit 0, ?',
@@ -80,10 +78,10 @@ class SqliteStore(object):
 
         try:
             cursor.execute('insert into places (uri, title, bookmark, ' \
-                           'gecko_flags, visits, last_visit) ' \
-                           'values (?, ?, ?, ?, ?, ?)', \
+                           'visits, last_visit) ' \
+                           'values (?, ?, ?, ?, ?)', \
                            (place.uri, place.title, place.bookmark,
-                            place.gecko_flags, place.visits, place.last_visit))
+                            place.visits, place.last_visit))
             self._connection.commit()
         finally:
             cursor.close()
@@ -92,7 +90,7 @@ class SqliteStore(object):
         cursor = self._connection.cursor()
 
         try:
-            cursor.execute('select uri, title, bookmark, gecko_flags,visits, ' \
+            cursor.execute('select uri, title, bookmark, visits, ' \
                            'last_visit from places where uri=?', (uri,))
 
             row = cursor.fetchone()
@@ -107,9 +105,9 @@ class SqliteStore(object):
         cursor = self._connection.cursor()
 
         try:
-            cursor.execute('update places set title=?, gecko_flags=?, '
+            cursor.execute('update places set title=?, '
                            'visits=?, last_visit=?, bookmark=? where uri=?',
-                           (place.title, place.gecko_flags, place.visits,
+                           (place.title, place.visits,
                             place.last_visit, place.bookmark, place.uri))
             self._connection.commit()
         finally:
@@ -118,7 +116,7 @@ class SqliteStore(object):
     def _place_from_row(self, row):
         place = Place()
 
-        place.uri, place.title, place.bookmark, place.gecko_flags, \
+        place.uri, place.title, place.bookmark, \
             place.visits, place.last_visit = row
 
         return place

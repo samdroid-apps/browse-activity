@@ -32,7 +32,6 @@ from sugar import env
 from sugar.activity import activity
 from sugar.graphics import style
 
-import sessionstore
 from palettes import ContentInvoker
 
 _ZOOM_AMOUNT = 0.1
@@ -45,6 +44,7 @@ class TabbedView(gtk.Notebook):
                                'agent-stylesheet.css')
     USER_SHEET = os.path.join(env.get_profile_path(), 'gecko',
                               'user-stylesheet.css')
+    HOME_PAGE = 'http://sugarlabs.org'
 
     def __init__(self):
         gobject.GObject.__init__(self)
@@ -57,7 +57,7 @@ class TabbedView(gtk.Notebook):
     def new_tab(self, uri=None):
         browser = Browser()
         self._append_tab(browser)
-        browser.load_uri(uri)
+        browser.load_uri(uri or self.HOME_PAGE)
 
     def _append_tab(self, browser):
         label = TabLabel(browser)
@@ -66,13 +66,13 @@ class TabbedView(gtk.Notebook):
         #set stylesheets
         settings = browser.get_settings()
 
-        if os.path.exists(TabbedView.AGENT_SHEET):
+        if os.path.exists(self.AGENT_SHEET):
             # used to disable flash movies until you click them.
             settings.set_property('user-stylesheet-uri', 'file:///' +
-                                   TabbedView.AGENT_SHEET)
-        if os.path.exists(TabbedView.USER_SHEET):
+                                  self.AGENT_SHEET)
+        if os.path.exists(self.USER_SHEET):
             settings.set_property('user-stylesheet-uri', 'file:///' +
-                                   TabbedView.USER_SHEET)
+                                  self.USER_SHEET)
 
         # improves browsing on some buggy websites
         settings.set_property('enable-site-specific-quirks', True)
@@ -98,7 +98,7 @@ class TabbedView(gtk.Notebook):
         tab_sessions = []
         for index in xrange(0, self.get_n_pages()):
             browser = self.get_nth_page(index)
-            tab_sessions.append(sessionstore.get_session(browser))
+            tab_sessions.append(browser.get_session())
         return tab_sessions
 
     def set_session(self, tab_sessions):
@@ -112,7 +112,7 @@ class TabbedView(gtk.Notebook):
         for tab_session in tab_sessions:
             browser = Browser()
             self._append_tab(browser)
-            sessionstore.set_session(browser, tab_session)
+            browser.set_session(tab_session)
 
 
 gtk.rc_parse_string('''
@@ -178,20 +178,18 @@ class Browser(webkit.WebView):
     def __init__(self):
         webkit.WebView.__init__(self)
         
-        self.connect('download-requested', __download_requested_cb)
+        self.connect('download-requested', self.__download_requested_cb)
 
     def load_uri(self, uri):
-        r = urlparse.urlparse(uri)
-        if r.schema == '' and r.netloc == '':
-            return urlparse.ParseResult('http', r.path, '', '', '', '').geturl()
+        '''Load a URI.
         
-        return uri
+        Turns 'example.com' into 'http://example.com' if needed.'''
 
-    def get_session(self):
-        return sessionstore.get_session(self)
+        parsed_uri = urlparse.urlparse(uri)
+        if parsed_uri.scheme == '' and parsed_uri.netloc == '':
+            uri = 'http://' + parsed_uri.path
 
-    def set_session(self, data):
-        return sessionstore.set_session(self, data)
+        super(Browser, self).load_uri(uri)
 
     def __download_requested_cb():
         #TODO download ui
@@ -207,7 +205,7 @@ class Browser(webkit.WebView):
             temp_path = os.path.join(activity.get_activity_root(), 'instance')
             file_path = os.path.join(temp_path, '%i' % time.time())
 
-            # get source and wite it to file
+            # get source and write it to file
             source = self.get_main_frame().get_data_source().get_data()
             f = open(file_path, 'w')
             f.write(source)
@@ -215,6 +213,34 @@ class Browser(webkit.WebView):
 
             async_cb(file_path)
 
+    def get_session(self):
+        history = self.get_back_forward_list()
+        history_items = history.get_back_list_with_limit() + \
+                        history.get_current_item() + \
+                        history.get_forward_list_with_limit()
+
+        entries = []
+        for item in history_items:
+            entry = {'url':    item.props.uri,
+                     'title':  item.props.title}
+            entries.append(entry)
+
+        return entries_dest
+    
+    def set_session(self, data):
+        history = self.get_back_forward_list()
+        history.clear()
+
+        for entry_dict in data:
+            logging.debug('entry_dict: %r' % entry_dict)
+
+            entry = webkit.WebHistoryItem(entry_dict['url'], entry_dict['title'])
+            history.add_item(entry)
+
+        #if data:
+        #    history.go_to_item(len(data) - 1)
+        #else:
+        #    self.load_uri('about:blank')
 
 class PopupDialog(gtk.Window):
     def __init__(self):

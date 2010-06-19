@@ -216,7 +216,7 @@ class WebEntry(AddressEntry):
         else:
             self._search_popup()
 
-
+#TODO
 class PrimaryToolbar(ToolbarBox):
     __gtype_name__ = 'PrimaryToolbar'
 

@@ -355,13 +355,7 @@ class PrimaryToolbar(ToolbarBox):
         self.entry.props.progress = progress
 
     def _set_address(self, uri):
-        if uri is not None:
-            cls = components.classes['@mozilla.org/intl/texttosuburi;1']
-            texttosuburi = cls.getService(interfaces.nsITextToSubURI)
-            ui_uri = texttosuburi.unEscapeURIForUI(uri.originCharset, uri.spec)
-        else:
-            ui_uri = None
-        self.entry.props.address = ui_uri
+        self.entry.props.address = uri
 
     def _set_title(self, title):
         self.entry.props.title = title
@@ -400,10 +394,9 @@ class PrimaryToolbar(ToolbarBox):
     def _stop_and_reload_cb(self, button):
         browser = self._tabbed_view.props.current_browser
         if self._loading:
-            browser.web_navigation.stop(interfaces.nsIWebNavigation.STOP_ALL)
+            browser.stop()
         else:
-            flags = interfaces.nsIWebNavigation.LOAD_FLAGS_NONE
-            browser.web_navigation.reload(flags)
+            browser.reload()
 
     def _set_loading(self, loading):
         self._loading = loading
@@ -417,7 +410,8 @@ class PrimaryToolbar(ToolbarBox):
 
     def _reload_session_history(self, current_page_index=None):
         browser = self._tabbed_view.props.current_browser
-        session_history = browser.web_navigation.sessionHistory
+        history = browser.get_back_forward_list()
+        
         if current_page_index is None:
             current_page_index = session_history.index
 
@@ -454,7 +448,9 @@ class PrimaryToolbar(ToolbarBox):
 
     def _history_item_activated_cb(self, menu_item, index):
         browser = self._tabbed_view.props.current_browser
-        browser.web_navigation.gotoIndex(index)
+        history = browser.get_back_forward_list()
+        
+        history.go_to_item(history.get_nth_item(index))
 
     def _link_add_clicked_cb(self, button):
         self.emit('add-link')

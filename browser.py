@@ -177,6 +177,8 @@ class Browser(webkit.WebView):
 
     def __init__(self):
         webkit.WebView.__init__(self)
+        
+        self.connect('download-requested', __download_requested_cb)
 
     def load_uri(self, uri):
         r = urlparse.urlparse(uri)
@@ -191,27 +193,27 @@ class Browser(webkit.WebView):
     def set_session(self, data):
         return sessionstore.set_session(self, data)
 
-    def get_source(self, async_cb, async_err_cb):
-        #cls = components.classes[ \
-        #        '@mozilla.org/embedding/browser/nsWebBrowserPersist;1']
-        #persist = cls.createInstance(interfaces.nsIWebBrowserPersist)
-        ## get the source from the cache
-        #persist.persistFlags = \
-        #        interfaces.nsIWebBrowserPersist.PERSIST_FLAGS_FROM_CACHE
-        #
-        #temp_path = os.path.join(activity.get_activity_root(), 'instance')
-        #file_path = os.path.join(temp_path, '%i' % time.time())
-        #cls = components.classes["@mozilla.org/file/local;1"]
-        #local_file = cls.createInstance(interfaces.nsILocalFile)
-        #local_file.initWithPath(file_path)
-        #
-        #progresslistener = GetSourceListener(file_path, async_cb, async_err_cb)
-        #persist.progressListener = xpcom.server.WrapObject(
-        #    progresslistener, interfaces.nsIWebProgressListener)
-        #
-        #uri = self.web_navigation.currentURI
-        #persist.saveURI(uri, self.doc_shell, None, None, None, local_file)
+    def __download_requested_cb():
+        #TODO download ui
+        #TODO start download
         pass
+
+    def get_source(self, async_cb, async_err_cb):
+        if self.props.progress == 0:
+            async_err_cb()
+
+        else:
+            # construct temporary file path
+            temp_path = os.path.join(activity.get_activity_root(), 'instance')
+            file_path = os.path.join(temp_path, '%i' % time.time())
+
+            # get source and wite it to file
+            source = self.get_main_frame().get_data_source().get_data()
+            f = open(file_path, 'w')
+            f.write(source)
+            f.close()
+
+            async_cb(file_path)
 
 
 class PopupDialog(gtk.Window):

@@ -147,6 +147,7 @@ class LinkPalette(Palette):
 
     def __download_activate_cb(self, menu_item):
         downloadmanager.save_link(self._url, self._title, self._owner_document)
+        
 
 
 class ImagePalette(Palette):

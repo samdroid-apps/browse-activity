@@ -40,7 +40,6 @@ def set_session(browser, data):
 
 
 def _get_history(history):
-    logging.debug('%r' % len(history))
     entries_dest = []
     for i in range(0, len(history)):
         entry_orig = history.get_nth_item(i)

@@ -104,13 +104,6 @@ class HelperAppLauncherDialog:
         launcher.saveToDisk(None, False)
         return NS_OK
 
-
-#components.registrar.registerFactory('{64355793-988d-40a5-ba8e-fcde78cac631}',
-#                                     'Sugar Download Manager',
-#                                     '@mozilla.org/helperapplauncherdialog;1',
-#                                     Factory(HelperAppLauncherDialog))
-
-
 class Download:
     #_com_interfaces_ = interfaces.nsITransfer
 

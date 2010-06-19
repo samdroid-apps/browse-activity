@@ -1,5 +1,5 @@
 # Copyright (C) 2008, One Laptop Per Child
-# Copyright (C) 2009 Simon Schampijer
+# Copyright (C) 2009 Simon Schampijer, Bobby Powers
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,8 +26,6 @@ from sugar.graphics import style
 
 class EditToolbar(activity.EditToolbar):
 
-    #_com_interfaces_ = interfaces.nsIObserver
-
     def __init__(self, act):
         activity.EditToolbar.__init__(self)
 
@@ -37,30 +35,6 @@ class EditToolbar(activity.EditToolbar):
         self.redo.connect('clicked', self.__redo_cb)
         self.copy.connect('clicked', self.__copy_cb)
         self.paste.connect('clicked', self.__paste_cb)
-
-        """
-        Notifications are not working right now:
-        https://bugzilla.mozilla.org/show_bug.cgi?id=207339
-
-        command_manager = self._get_command_manager()
-        self.undo.set_sensitive(
-                command_manager.isCommandEnabled('cmd_undo', None))
-        self.redo.set_sensitive(
-                command_manager.isCommandEnabled('cmd_redo', None))
-        self.copy.set_sensitive(
-                command_manager.isCommandEnabled('cmd_copy', None))
-        self.paste.set_sensitive(
-                command_manager.isCommandEnabled('cmd_paste', None))
-
-        self._observer = xpcom.server.WrapObject(self, interfaces.nsIObserver)
-        command_manager.addCommandObserver(self._observer, 'cmd_undo')
-        command_manager.addCommandObserver(self._observer, 'cmd_redo')
-        command_manager.addCommandObserver(self._observer, 'cmd_copy')
-        command_manager.addCommandObserver(self._observer, 'cmd_paste')
-
-    def observe(self, subject, topic, data):
-        logging.debug('observe: %r %r %r' % (subject, topic, data))
-        """
 
         separator = gtk.SeparatorToolItem()
         separator.set_draw(False)
@@ -100,36 +74,27 @@ class EditToolbar(activity.EditToolbar):
         self._next.show()
 
     def __undo_cb(self, button):
-        command_manager = self._get_command_manager()
-        command_manager.doCommand('cmd_undo', None, None)
+        logging.error('Undo not implemented.')
 
     def __redo_cb(self, button):
-        command_manager = self._get_command_manager()
-        command_manager.doCommand('cmd_redo', None, None)
+        logging.error('Redo not implemented.')
 
     def __copy_cb(self, button):
-        command_manager = self._get_command_manager()
-        command_manager.doCommand('cmd_copy', None, None)
+        logging.error('Copy not implemented.')
 
     def __paste_cb(self, button):
-        command_manager = self._get_command_manager()
-        command_manager.doCommand('cmd_paste', None, None)
-
-    def _get_command_manager(self):
-        tabbed_view = self._activity.get_canvas()
-        web_browser = tabbed_view.props.current_browser.browser
-        requestor = web_browser.queryInterface(interfaces.nsIInterfaceRequestor)
-        return requestor.getInterface(interfaces.nsICommandManager)
+        logging.error('Paste not implemented.')
 
     def __search_entry_activate_cb(self, entry):
-        tabbed_view = self._activity.get_canvas()
-        tabbed_view.props.current_browser.typeahead.findAgain(False, False)
+        browser = self._activity.get_canvas().props.current_browser
+        browser.search_text(entry.props.text, False, True, True)
 
     def __search_entry_changed_cb(self, entry):
         tabbed_view = self._activity.get_canvas()
-        found = tabbed_view.props.current_browser.typeahead.find( \
-            entry.props.text, False)
-        if found == interfaces.nsITypeAheadFind.FIND_NOTFOUND:
+        found = tabbed_view.props.current_browser.search_text(
+                                        entry.props.text, False, True, True)
+
+        if not found:
             self._prev.props.sensitive = False
             self._next.props.sensitive = False
             entry.modify_text(gtk.STATE_NORMAL,
@@ -142,8 +107,10 @@ class EditToolbar(activity.EditToolbar):
 
     def __find_previous_cb(self, button):
         tabbed_view = self._activity.get_canvas()
-        tabbed_view.props.current_browser.typeahead.findAgain(True, False)
+        tabbed_view.props.current_browser.search_text(
+                            self.search_entry.props.text, False, False, True)
 
     def __find_next_cb(self, button):
         tabbed_view = self._activity.get_canvas()
-        tabbed_view.props.current_browser.typeahead.findAgain(False, False)
+        tabbed_view.props.current_browser.search_text(
+                            self.search_entry.props.text, False, True, True)

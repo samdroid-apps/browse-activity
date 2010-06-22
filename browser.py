@@ -197,7 +197,7 @@ class Browser(webkit.WebView):
         pass
 
     def get_source(self, async_cb, async_err_cb):
-        if self.props.progress == 0:
+        if self.props.load_status == webkit.LOAD_FINISHED:
             async_err_cb()
 
         else:

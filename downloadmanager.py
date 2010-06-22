@@ -24,6 +24,7 @@ import urlparse
 import urllib
 
 import gtk
+import webkit
 
 from sugar.datastore import datastore
 from sugar import profile
@@ -39,9 +40,6 @@ if dbus.version >= (0, 82, 3):
     DBUS_PYTHON_TIMEOUT_UNITS_PER_SECOND = 1
 else:
     DBUS_PYTHON_TIMEOUT_UNITS_PER_SECOND = 1000
-
-NS_BINDING_ABORTED = 0x804b0002             # From nsNetError.h
-NS_ERROR_SAVE_LINK_AS_TIMEOUT = 0x805d0020  # From nsURILoader.h
 
 DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
 DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
@@ -68,8 +66,6 @@ def remove_all_downloads():
 
 
 class HelperAppLauncherDialog:
-    #_com_interfaces_ = interfaces.nsIHelperAppLauncherDialog
-
     def promptForSaveToFile(self, launcher, window_context,
                             default_file, suggested_file_extension,
                             force_prompt=False):
@@ -105,8 +101,6 @@ class HelperAppLauncherDialog:
         return NS_OK
 
 class Download:
-    #_com_interfaces_ = interfaces.nsITransfer
-
     def init(self, source, target, display_name, mime_info, start_time,
              temp_file, cancelable):
         self._source = source
@@ -283,13 +277,6 @@ class Download:
             self.cancelable.cancel(NS_ERROR_FAILURE) #NS_BINDING_ABORTED)
             _active_downloads.remove(self)
 
-
-#components.registrar.registerFactory('{23c51569-e9a1-4a92-adeb-3723db82ef7c}',
-#                                     'Sugar Download',
-#                                     '@mozilla.org/transfer;1',
-#                                     Factory(Download))
-
-
 def save_link(url, text, owner_document):
     # Inspired on Firefox' browser/base/content/nsContextMenu.js:saveLink()
 
@@ -319,64 +306,3 @@ def save_link(url, text, owner_document):
             _SaveLinkProgressListener(owner_document),
             interfaces.nsIStreamListener)
     channel.asyncOpen(listener, None)
-
-
-def _implements_interface(obj, interface):
-    try:
-        obj.QueryInterface(interface)
-        return True
-    except xpcom.Exception, e:
-        if e.errno == NS_NOINTERFACE:
-            return False
-        else:
-            raise
-
-
-class _AuthPromptCallback(object):
-    #_com_interfaces_ = interfaces.nsIInterfaceRequestor
-
-    def __init__(self, dom_window):
-        self._dom_window = dom_window
-
-    def getInterface(self, uuid):
-        if uuid in [interfaces.nsIAuthPrompt, interfaces.nsIAuthPrompt2]:
-            cls = components.classes["@mozilla.org/embedcomp/window-watcher;1"]
-            window_watcher = cls.getService(interfaces.nsIPromptFactory)
-            return window_watcher.getPrompt(self._dom_window, uuid)
-        return None
-
-
-class _SaveLinkProgressListener(object):
-    #_com_interfaces_ = interfaces.nsIStreamListener
-
-    """ an object to proxy the data through to
-    nsIExternalHelperAppService.doContent, which will wait for the appropriate
-    MIME-type headers and then prompt the user with a file picker
-    """
-
-    def __init__(self, owner_document):
-        self._owner_document = owner_document
-        self._external_listener = None
-
-    def onStartRequest(self, request, context):
-        if request.status != NS_OK:
-            logging.error("Error downloading link")
-            return
-
-        cls = components.classes[
-                "@mozilla.org/uriloader/external-helper-app-service;1"]
-        external_helper = cls.getService(interfaces.nsIExternalHelperAppService)
-
-        channel = request.QueryInterface(interfaces.nsIChannel)
-
-        self._external_listener = \
-            external_helper.doContent(channel.contentType, request,
-                                      self._owner_document.defaultView, True)
-        self._external_listener.onStartRequest(request, context)
-
-    def onStopRequest(self, request, context, statusCode):
-        self._external_listener.onStopRequest(request, context, statusCode)
-
-    def onDataAvailable(self, request, context, inputStream, offset, count):
-        self._external_listener.onDataAvailable(request, context, inputStream,
-                                                offset, count)

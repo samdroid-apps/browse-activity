@@ -168,7 +168,7 @@ class TabLabel(gtk.HBox):
     def __location_changed_cb(self, browser):
         sefl._label.set_text(browser.props.uri)
 
-    def __title_changed_cb(self, browser, pspec):
+    def __title_changed_cb(self, browser):
         self._label.set_text(browser.props.title)
 
 
@@ -191,10 +191,11 @@ class Browser(webkit.WebView):
 
         super(Browser, self).load_uri(uri)
 
-    def __download_requested_cb():
+    def __download_requested_cb(self, download, user_data):
         #TODO download ui
-        #TODO start download
-        pass
+        downloadmanager.save_link(download, user_data)
+
+        return True
 
     def get_source(self, async_cb, async_err_cb):
         if self.props.load_status == webkit.LOAD_FINISHED:

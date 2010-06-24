@@ -406,6 +406,7 @@ class PrimaryToolbar(ToolbarBox):
             self._stop_and_reload.set_tooltip(_('Reload'))
 
     def _reload_session_history(self, current_page_index=None):
+        #TODO rewrite
         browser = self._tabbed_view.props.current_browser
         history = browser.get_back_forward_list()
         

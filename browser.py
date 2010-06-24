@@ -136,7 +136,7 @@ class TabLabel(gtk.HBox):
         gobject.GObject.__init__(self)
 
         self._browser = browser
-        self._browser.connect('load-finished', self.__browser_is_setup_cb)
+        self._browser.connect('notify::load-status', self.__browser_loaded_cb)
 
         self._label = gtk.Label('')
         self.pack_start(self._label)
@@ -158,9 +158,10 @@ class TabLabel(gtk.HBox):
     def __button_clicked_cb(self, button):
         self.emit('tab-close', self._browser)
 
-    def __browser_is_setup_cb(self, browser, load_status):
-        browser.connect('notify::uri', self.__location_changed_cb)
-        browser.connect('notify::title', self.__title_changed_cb)
+    def __browser_loaded_cb(self, browser, load_status):
+        if load_status == webkit.LOAD_FINISHED:
+            browser.connect('notify::uri', self.__location_changed_cb)
+            browser.connect('notify::title', self.__title_changed_cb)
 
     def __location_changed_cb(self, browser, uri):
         sefl._label.set_text(uri)
@@ -190,12 +191,12 @@ class Browser(webkit.WebView):
 
     def __download_requested_cb(self, download, user_data):
         #TODO download ui
-        downloadmanager.save_link(download, user_data)
+        user_download = downloadmanager.UserDownload(download)
 
         return True
 
     def get_source(self, async_cb, async_err_cb):
-        if self.props.load_status == webkit.LOAD_FINISHED:
+        if self.props.load_status != webkit.LOAD_FINISHED:
             async_err_cb()
 
         else:

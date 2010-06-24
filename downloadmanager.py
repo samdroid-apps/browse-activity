@@ -63,7 +63,7 @@ def remove_all_downloads():
             datastore.delete(download.dl_jobject.object_id)
             download.cleanup_datastore_write()
 
-class Download(object):
+class UserDownload(object):
     def __init__(self, download):
         self._download = download
         self._source = download.get_uri()
@@ -219,6 +219,6 @@ class Download(object):
             self.cancel()
             _active_downloads.remove(self)
 
-def save_link(download, user_data):
-
-    dl = Download(download)
+def save_link(uri, title, owner_doc):
+    #TODO
+    pass

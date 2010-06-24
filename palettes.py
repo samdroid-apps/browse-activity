@@ -50,6 +50,7 @@ class ContentInvoker(Invoker):
         return None
 
     def handleEvent(self, event):
+        #TODO rewrite
         if event.button != 2:
             return
 
@@ -79,6 +80,7 @@ class ContentInvoker(Invoker):
 
 
 class LinkPalette(Palette):
+    #TODO rewrite
 
     def __init__(self, browser, title, url, owner_document):
         Palette.__init__(self)
@@ -147,7 +149,6 @@ class LinkPalette(Palette):
 
     def __download_activate_cb(self, menu_item):
         downloadmanager.save_link(self._url, self._title, self._owner_document)
-        
 
 
 class ImagePalette(Palette):

@@ -66,17 +66,30 @@ def remove_all_downloads():
 class Download(object):
     def __init__(self, download):
         self._download = download
-        self.datastore_deleted_handler = None
-        
+        self._source = download.get_uri()
+
         self._download.connect('notify::progress', self.__progress_change_cb)
         self._download.connect('notify::status', self.__state_change_cb)
         self._download.connect('error', self.__error_cb)
+
+        self.datastore_deleted_handler = None
 
         self.dl_jobject = None
         self._object_id = None
         self._last_update_time = 0
         self._last_update_percent = 0
         self._stop_alert = None
+
+        # figure out download URI
+        self._dest_uri = os.path.join(activity.get_activity_root(), 'instance',
+                                      download.props.suggested_filename)
+
+        if not os.path.exists(self._dest_uri):
+            os.makedirs(self._dest_uri)
+
+        # start download
+        self._download.set_destination_uri(self._dest_uri)
+        self._download.start()
 
     def __progress_change_cb(self, download, progress):
         self.dl_jobject.metadata['progress'] = str(int(progress * 100))
@@ -113,13 +126,13 @@ class Download(object):
 
             self.dl_jobject.metadata['title'] = self._get_file_name()
             self.dl_jobject.metadata['description'] = _('From: %s') \
-                % self._source.spec
+                % self._source
             self.dl_jobject.metadata['progress'] = '100'
-            self.dl_jobject.file_path = self._target_file.path
+            self.dl_jobject.file_path = self._dest_uri
 
             if self._mime_type in ['application/octet-stream',
                                    'application/x-zip']:
-                sniffed_mime_type = mime.get_for_file(self._target_file.path)
+                sniffed_mime_type = mime.get_for_file(self._dest_uri)
                 self.dl_jobject.metadata['mime_type'] = sniffed_mime_type
 
             datastore.write(self.dl_jobject,
@@ -169,20 +182,17 @@ class Download(object):
         self.dl_jobject = None
 
     def _get_file_name(self):
-        if self._display_name:
-            return self._display_name
-        elif self._source.scheme == 'data':
+        src = urlparse.urlparse(self._source)
+        
+        if src.scheme == 'data':
             return 'Data URI'
         else:
-            path = urlparse.urlparse(self._source.spec).path
-            location, file_name = os.path.split(path)
-            file_name = urllib.unquote(file_name.encode('utf-8', 'replace'))
-            return file_name
+            return self._download.get_suggested_filename() 
 
     def _create_journal_object(self):
         self.dl_jobject = datastore.create()
         self.dl_jobject.metadata['title'] = _('Downloading %s from \n%s.') % \
-                (self._get_file_name(), self._source.spec)
+                (self._get_file_name(), self._source)
 
         self.dl_jobject.metadata['progress'] = '0'
         self.dl_jobject.metadata['keep'] = '0'
@@ -210,10 +220,5 @@ class Download(object):
             _active_downloads.remove(self)
 
 def save_link(download, user_data):
-    dest_uri = os.path.join(activity.get_activity_root(), 'instance',
-                            download.props.suggested_filename)
 
-    if not os.path.exists(dest_uri):
-        os.makedirs(temp_path)
-
-    dl = Download(download, dest_uri)
+    dl = Download(download)

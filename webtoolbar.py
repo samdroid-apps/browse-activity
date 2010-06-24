@@ -21,6 +21,7 @@ from gettext import gettext as _
 import gobject
 import gtk
 import pango
+import webkit
 
 from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.menuitem import MenuItem
@@ -216,7 +217,7 @@ class WebEntry(AddressEntry):
         else:
             self._search_popup()
 
-#TODO
+
 class PrimaryToolbar(ToolbarBox):
     __gtype_name__ = 'PrimaryToolbar'
 
@@ -277,7 +278,6 @@ class PrimaryToolbar(ToolbarBox):
         stop_button = StopButton(self._activity)
         self.toolbar.insert(stop_button, -1)
 
-        self._progress_listener = None
         self._history = None
         self._browser = None
 
@@ -296,25 +296,24 @@ class PrimaryToolbar(ToolbarBox):
         self._connect_to_browser(tabbed_view.props.current_browser)
 
     def _connect_to_browser(self, browser):
-        if self._progress_listener is not None:
-            self._progress_listener.disconnect(self._location_changed_hid)
-            self._progress_listener.disconnect(self._loading_changed_hid)
-            self._progress_listener.disconnect(self._progress_changed_hid)
+        if self._browser:
+            self._browser.disconnect(self._location_changed_hid)
+            self._browser.disconnect(self._loading_changed_hid)
+            self._browser.disconnect(self._progress_changed_hid)
 
-        self._progress_listener = browser.progress
-        self._set_progress(self._progress_listener.progress)
-        if self._progress_listener.location:
-            self._set_address(self._progress_listener.location)
+        self._set_progress(self._browser.props.progress)
+        if self._browser.props.uri:
+            self._set_address(self._browser.props.uri)
         else:
             self._set_address(None)
-        self._set_loading(self._progress_listener.loading)
+        self._set_loading(self._browser.props.load_status)
         self._update_navigation_buttons()
 
-        self._location_changed_hid = self._progress_listener.connect(
+        self._location_changed_hid = self._browser.connect(
                 'notify::location', self.__location_changed_cb)
-        self._loading_changed_hid = self._progress_listener.connect(
-                'notify::loading', self.__loading_changed_cb)
-        self._progress_changed_hid = self._progress_listener.connect(
+        self._loading_changed_hid = self._browser.connect(
+                'notify::load-status', self.__loading_changed_cb)
+        self._progress_changed_hid = self._browser.connect(
                 'notify::progress', self.__progress_changed_cb)
 
         if self._history is not None:
@@ -337,15 +336,15 @@ class PrimaryToolbar(ToolbarBox):
         # We have to wait until the history info is updated.
         gobject.idle_add(self._reload_session_history, current_page_index)
 
-    def __location_changed_cb(self, progress_listener, pspec):
-        self._set_address(progress_listener.location)
+    def __location_changed_cb(self, browser, uri):
+        self._set_address(uri)
         self._update_navigation_buttons()
         filepicker.cleanup_temp_files()
 
-    def __loading_changed_cb(self, progress_listener, pspec):
-        if progress_listener.loading:
+    def __loading_changed_cb(self, browser, uri):
+        if browser.props.load_status != webkit.LOAD_FINISHED:
             self._set_title(None)
-        self._set_loading(progress_listener.loading)
+        self._set_loading()
         self._update_navigation_buttons()
 
     def __progress_changed_cb(self, progress_listener, pspec):
@@ -368,12 +367,10 @@ class PrimaryToolbar(ToolbarBox):
 
     def _update_navigation_buttons(self):
         browser = self._tabbed_view.props.current_browser
+        history = browser.get_back_forward_list()
 
-        can_go_back = browser.web_navigation.canGoBack
-        self._back.props.sensitive = can_go_back
-
-        can_go_forward = browser.web_navigation.canGoForward
-        self._forward.props.sensitive = can_go_forward
+        self._back.props.sensitive = history.get_back_length > 0
+        self._forward.props.sensitive = history.get_forward_length > 0
 
     def _entry_activate_cb(self, entry):
         browser = self._tabbed_view.props.current_browser
@@ -382,18 +379,18 @@ class PrimaryToolbar(ToolbarBox):
 
     def _go_back_cb(self, button):
         browser = self._tabbed_view.props.current_browser
-        browser.web_navigation.goBack()
+        browser.get_back_forward_list().go_back()
 
     def _go_forward_cb(self, button):
         browser = self._tabbed_view.props.current_browser
-        browser.web_navigation.goForward()
+        browser.get_back_forward_list().go_forward()
 
     def _title_changed_cb(self, embed, spec):
         self._set_title(embed.props.title)
 
     def _stop_and_reload_cb(self, button):
         browser = self._tabbed_view.props.current_browser
-        if self._loading:
+        if browser.props.load_status != webkit.LOAD_FINISHED:
             browser.stop()
         else:
             browser.reload()

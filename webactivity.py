@@ -23,7 +23,6 @@ import gobject
 gobject.threads_init()
 
 import gtk
-import sha
 import base64
 import time
 import shutil
@@ -31,6 +30,7 @@ import sqlite3
 import cjson
 import gconf
 import locale
+from hashlib import sha1
 
 import webkit
 
@@ -49,7 +49,7 @@ from sugar import mime
 PROFILE_VERSION = 2
 
 _profile_version = 0
-_profile_path = os.path.join(activity.get_activity_root(), 'data/gecko')
+_profile_path = os.path.join(activity.get_activity_root(), 'data/webkit')
 _version_file = os.path.join(_profile_path, 'version')
 
 if os.path.exists(_version_file):
@@ -83,7 +83,7 @@ def _seed_xs_cookie():
 
     pubkey = profile.get_profile().pubkey
     cookie_data = {'color': profile.get_color().to_string(),
-                   'pkey_hash': sha.new(pubkey).hexdigest()}
+                   'pkey_hash': sha1.new(pubkey).hexdigest()}
 
     db_path = os.path.join(_profile_path, 'cookies.sqlite')
     try:
@@ -441,9 +441,9 @@ class WebActivity(activity.Activity):
         uri = browser.props.uri
 
         for link in self.model.data['shared_links']:
-            if link['hash'] == sha.new(uri).hexdigest():
+            if link['hash'] == sha1.new(uri).hexdigest():
                 _logger.debug('_add_link: link exist already a=%s b=%s' %(
-                    link['hash'], sha.new(uri).hexdigest()))
+                    link['hash'], sha1.new(uri).hexdigest()))
                 return
         buf = self._get_screenshot()
         timestamp = time.time()

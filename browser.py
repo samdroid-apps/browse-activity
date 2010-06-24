@@ -42,7 +42,7 @@ class TabbedView(gtk.Notebook):
 
     AGENT_SHEET = os.path.join(activity.get_bundle_path(),
                                'agent-stylesheet.css')
-    USER_SHEET = os.path.join(env.get_profile_path(), 'gecko',
+    USER_SHEET = os.path.join(env.get_profile_path(), 'webkit',
                               'user-stylesheet.css')
     HOME_PAGE = 'http://sugarlabs.org'
 
@@ -136,9 +136,7 @@ class TabLabel(gtk.HBox):
         gobject.GObject.__init__(self)
 
         self._browser = browser
-        self._browser.connect('notify::load-status', self.__browser_is_setup_cb)
-        self._browser.connect('notify::title', self.__title_changed_cb)
-        self._browser.connect('notify::uri', self.__location_changed_cb)
+        self._browser.connect('load-finished', self.__browser_is_setup_cb)
 
         self._label = gtk.Label('')
         self.pack_start(self._label)
@@ -160,16 +158,15 @@ class TabLabel(gtk.HBox):
     def __button_clicked_cb(self, button):
         self.emit('tab-close', self._browser)
 
-    def __browser_is_setup_cb(self, browser):
-        browser.progress.connect('notify::location',
-                                 self.__location_changed_cb)
+    def __browser_is_setup_cb(self, browser, load_status):
+        browser.connect('notify::uri', self.__location_changed_cb)
         browser.connect('notify::title', self.__title_changed_cb)
 
-    def __location_changed_cb(self, browser):
-        sefl._label.set_text(browser.props.uri)
+    def __location_changed_cb(self, browser, uri):
+        sefl._label.set_text(uri)
 
-    def __title_changed_cb(self, browser):
-        self._label.set_text(browser.props.title)
+    def __title_changed_cb(self, browser, title):
+        self._label.set_text(title)
 
 
 class Browser(webkit.WebView):

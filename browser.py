@@ -136,7 +136,8 @@ class TabLabel(gtk.HBox):
         gobject.GObject.__init__(self)
 
         self._browser = browser
-        self._browser.connect('notify::load-status', self.__browser_loaded_cb)
+        # load-finished is deprecated, use notify::load-status in the future
+        self._browser.connect('load-finished', self.__browser_loaded_cb)
 
         self._label = gtk.Label('')
         self.pack_start(self._label)
@@ -159,9 +160,8 @@ class TabLabel(gtk.HBox):
         self.emit('tab-close', self._browser)
 
     def __browser_loaded_cb(self, browser, load_status):
-        if load_status == webkit.LOAD_FINISHED:
-            browser.connect('notify::uri', self.__location_changed_cb)
-            browser.connect('notify::title', self.__title_changed_cb)
+        browser.connect('notify::uri', self.__location_changed_cb)
+        browser.connect('notify::title', self.__title_changed_cb)
 
     def __location_changed_cb(self, browser, uri):
         sefl._label.set_text(uri)
@@ -176,6 +176,9 @@ class Browser(webkit.WebView):
     def __init__(self):
         webkit.WebView.__init__(self)
         
+        self._loaded = False # needed until webkitgtk 1.1.7+
+        
+        self.connect('load-finished', self.__loading_finished_cb)
         self.connect('download-requested', self.__download_requested_cb)
 
     def load_uri(self, uri):
@@ -194,9 +197,12 @@ class Browser(webkit.WebView):
         user_download = downloadmanager.UserDownload(download)
 
         return True
+    
+    def __loading_finished_cb(self, frame, user_data):
+        self._loaded = True
 
     def get_source(self, async_cb, async_err_cb):
-        if self.props.load_status != webkit.LOAD_FINISHED:
+        if self._loaded:
             async_err_cb()
 
         else:

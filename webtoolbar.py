@@ -296,25 +296,28 @@ class PrimaryToolbar(ToolbarBox):
         self._connect_to_browser(tabbed_view.props.current_browser)
 
     def _connect_to_browser(self, browser):
-        if self._browser:
-            self._browser.disconnect(self._location_changed_hid)
-            self._browser.disconnect(self._loading_changed_hid)
-            self._browser.disconnect(self._progress_changed_hid)
+        if self._browser is None:
+            return
 
-        self._set_progress(self._browser.props.progress)
-        if self._browser.props.uri:
-            self._set_address(self._browser.props.uri)
-        else:
-            self._set_address(None)
-        self._set_loading(self._browser.props.load_status)
+        self._browser.disconnect(self._location_changed_hid)
+        self._browser.disconnect(self._loading_changed_hid)
+        self._browser.disconnect(self._loading_finished_hid)
+        self._browser.disconnect(self._progress_changed_hid)
+
+        self._set_progress(0) # self._browser.props.progress in wkgtk 1.1.7+
+        self._set_address(self._browser.props.uri)
+        self._set_loading(False)
         self._update_navigation_buttons()
 
         self._location_changed_hid = self._browser.connect(
-                'notify::location', self.__location_changed_cb)
+                'notify::uri', self.__location_changed_cb)
         self._loading_changed_hid = self._browser.connect(
-                'notify::load-status', self.__loading_changed_cb)
+                'load-finished', self.__loading_finished_cb)
+                # cannot use notify::load-status until PyGI+webkitgtk
+        self._loading_started_hid = self._browser.connect(
+                'load-started', self.__loading_started_cb)
         self._progress_changed_hid = self._browser.connect(
-                'notify::progress', self.__progress_changed_cb)
+                'load-progress-changed', self.__progress_changed_cb)
 
         if self._history is not None:
             self._history.disconnect(self._session_history_changed_hid)
@@ -330,25 +333,26 @@ class PrimaryToolbar(ToolbarBox):
         self._set_title(self._browser.props.title)
 
         self._title_changed_hid = self._browser.connect(
-                'notify::title', self._title_changed_cb)
+                'title-changed', self._title_changed_cb)
 
     def _session_history_changed_cb(self, session_history, current_page_index):
         # We have to wait until the history info is updated.
         gobject.idle_add(self._reload_session_history, current_page_index)
 
-    def __location_changed_cb(self, browser, uri):
-        self._set_address(uri)
+    def __location_changed_cb(self, frame):
+        self._set_address(frame.props.uri)
         self._update_navigation_buttons()
         filepicker.cleanup_temp_files()
 
-    def __loading_changed_cb(self, browser, uri):
-        if browser.props.load_status != webkit.LOAD_FINISHED:
-            self._set_title(None)
-        self._set_loading()
+    def __loading_started_cb(self, frame, user_data):
+        self._set_loading(True)
+
+    def __loading_finished_cb(self, frame, user_data):
+        self._set_loading(False)
         self._update_navigation_buttons()
 
-    def __progress_changed_cb(self, progress_listener, pspec):
-        self._set_progress(progress_listener.progress)
+    def __progress_changed_cb(self, progress, user_data):
+        self._set_progress(progress)
 
     def _set_progress(self, progress):
         self.entry.props.progress = progress
@@ -385,12 +389,12 @@ class PrimaryToolbar(ToolbarBox):
         browser = self._tabbed_view.props.current_browser
         browser.get_back_forward_list().go_forward()
 
-    def _title_changed_cb(self, embed, spec):
-        self._set_title(embed.props.title)
+    def _title_changed_cb(self, frame, title, user_data):
+        self._set_title(title)
 
     def _stop_and_reload_cb(self, button):
         browser = self._tabbed_view.props.current_browser
-        if browser.props.load_status != webkit.LOAD_FINISHED:
+        if self._loading:
             browser.stop()
         else:
             browser.reload()
@@ -406,43 +410,44 @@ class PrimaryToolbar(ToolbarBox):
             self._stop_and_reload.set_tooltip(_('Reload'))
 
     def _reload_session_history(self, current_page_index=None):
-        #TODO rewrite
-        browser = self._tabbed_view.props.current_browser
-        history = browser.get_back_forward_list()
-        
-        if current_page_index is None:
-            current_page_index = session_history.index
-
-        for palette in (self._back.get_palette(), self._forward.get_palette()):
-            for menu_item in palette.menu.get_children():
-                palette.menu.remove(menu_item)
-
-        if current_page_index > _MAX_HISTORY_ENTRIES:
-            bottom = current_page_index - _MAX_HISTORY_ENTRIES
-        else:
-            bottom = 0
-        if  (session_history.count - current_page_index) > \
-               _MAX_HISTORY_ENTRIES:
-            top = current_page_index + _MAX_HISTORY_ENTRIES + 1
-        else:
-            top = session_history.count
-
-        for i in range(bottom, top):
-            if i == current_page_index:
-                continue
-
-            entry = session_history.getEntryAtIndex(i, False)
-            menu_item = MenuItem(entry.title, text_maxlen=60)
-            menu_item.connect('activate', self._history_item_activated_cb, i)
-
-            if i < current_page_index:
-                palette = self._back.get_palette()
-                palette.menu.prepend(menu_item)
-            elif i > current_page_index:
-                palette = self._forward.get_palette()
-                palette.menu.append(menu_item)
-
-            menu_item.show()
+        #TODO port to webkit. not sure if it's even needed
+        #browser = self._tabbed_view.props.current_browser
+        #history = browser.get_back_forward_list()
+        #
+        #if current_page_index is None:
+        #    current_page_index = session_history.index
+        #
+        #for palette in (self._back.get_palette(), self._forward.get_palette()):
+        #    for menu_item in palette.menu.get_children():
+        #        palette.menu.remove(menu_item)
+        #
+        #if current_page_index > _MAX_HISTORY_ENTRIES:
+        #    bottom = current_page_index - _MAX_HISTORY_ENTRIES
+        #else:
+        #    bottom = 0
+        #if  (session_history.count - current_page_index) > \
+        #       _MAX_HISTORY_ENTRIES:
+        #    top = current_page_index + _MAX_HISTORY_ENTRIES + 1
+        #else:
+        #    top = session_history.count
+        #
+        #for i in range(bottom, top):
+        #    if i == current_page_index:
+        #        continue
+        #
+        #    entry = session_history.getEntryAtIndex(i, False)
+        #    menu_item = MenuItem(entry.title, text_maxlen=60)
+        #    menu_item.connect('activate', self._history_item_activated_cb, i)
+        #
+        #    if i < current_page_index:
+        #        palette = self._back.get_palette()
+        #        palette.menu.prepend(menu_item)
+        #    elif i > current_page_index:
+        #        palette = self._forward.get_palette()
+        #        palette.menu.append(menu_item)
+        #
+        #    menu_item.show()
+        pass
 
     def _history_item_activated_cb(self, menu_item, index):
         browser = self._tabbed_view.props.current_browser

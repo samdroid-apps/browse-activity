@@ -1,6 +1,7 @@
 # Copyright (C) 2006, Red Hat, Inc.
 # Copyright (C) 2007, One Laptop Per Child
 # Copyright (C) 2009, Tomeu Vizoso, Simon Schampijer
+# Copyright (C) 2010, Lucian Branescu Mihaila
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -40,11 +41,11 @@ _ZOOM_AMOUNT = 0.1
 class TabbedView(gtk.Notebook):
     __gtype_name__ = 'TabbedView'
 
-    AGENT_SHEET = os.path.join(activity.get_bundle_path(),
-                               'agent-stylesheet.css')
+    #AGENT_SHEET = os.path.join(activity.get_bundle_path(),
+    #                           'agent-stylesheet.css')
     USER_SHEET = os.path.join(env.get_profile_path(), 'webkit',
                               'user-stylesheet.css')
-    HOME_PAGE = 'http://sugarlabs.org'
+    #HOME_PAGE = 'http://sugarlabs.org'
 
     def __init__(self):
         gobject.GObject.__init__(self)
@@ -57,7 +58,8 @@ class TabbedView(gtk.Notebook):
     def new_tab(self, uri=None):
         browser = Browser()
         self._append_tab(browser)
-        browser.load_uri(uri or self.HOME_PAGE)
+        if uri:
+            browser.load_uri(uri)# or self.HOME_PAGE)
 
     def _append_tab(self, browser):
         label = TabLabel(browser)
@@ -66,10 +68,10 @@ class TabbedView(gtk.Notebook):
         #set stylesheets
         settings = browser.get_settings()
 
-        if os.path.exists(self.AGENT_SHEET):
-            # used to disable flash movies until you click them.
-            settings.set_property('user-stylesheet-uri', 'file:///' +
-                                  self.AGENT_SHEET)
+        #if os.path.exists(self.AGENT_SHEET):
+        #    # used to disable flash movies until you click them.
+        #    settings.set_property('user-stylesheet-uri', 'file:///' +
+        #                          self.AGENT_SHEET)
         if os.path.exists(self.USER_SHEET):
             settings.set_property('user-stylesheet-uri', 'file:///' +
                                   self.USER_SHEET)

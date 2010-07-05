@@ -45,7 +45,7 @@ class Model(gobject.GObject):
                 break
 
         self.data['shared_links'].insert(index,
-                                         {'hash':sha1.new(str(url)).hexdigest(),
+                                         {'hash':sha1(str(url)).hexdigest(),
                                           'url':str(url), 'title':str(title),
                                           'thumb':base64.b64encode(thumb),
                                           'owner':str(owner),

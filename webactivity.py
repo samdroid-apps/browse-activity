@@ -347,7 +347,7 @@ class WebActivity(activity.Activity):
         else:
             default_page = os.path.join(activity.get_bundle_path(),
                                         "data/index.html")
-            browser.load_uri(default_page)
+            browser.load_uri('file://' + default_page)
 
     def _get_data_from_file_path(self, file_path):
         fd = open(file_path, 'r')

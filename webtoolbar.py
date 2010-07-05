@@ -16,6 +16,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
 from gettext import gettext as _
 
 import gobject
@@ -67,7 +68,7 @@ class WebEntry(AddressEntry):
            recognize changes caused directly by user actions"""
         self.handler_block(self._change_hid)
         try:
-            self.props.text = text
+            self.props.text = text # TODO fix for webkit
         finally:
             self.handler_unblock(self._change_hid)
         self.set_position(-1)
@@ -313,7 +314,7 @@ class PrimaryToolbar(ToolbarBox):
                 'notify::uri', self.__location_changed_cb)
         self._loading_changed_hid = self._browser.connect(
                 'load-finished', self.__loading_finished_cb)
-                # cannot use notify::load-status until PyGI+webkitgtk
+                # cannot use notify::load-status until webkitgtk 1.1.7+
         self._loading_started_hid = self._browser.connect(
                 'load-started', self.__loading_started_cb)
         self._progress_changed_hid = self._browser.connect(
@@ -340,7 +341,7 @@ class PrimaryToolbar(ToolbarBox):
         gobject.idle_add(self._reload_session_history, current_page_index)
 
     def __location_changed_cb(self, frame):
-        self._set_address(frame.props.uri)
+        self._set_address(frame.get_uri())
         self._update_navigation_buttons()
         filepicker.cleanup_temp_files()
 
@@ -373,8 +374,8 @@ class PrimaryToolbar(ToolbarBox):
         browser = self._tabbed_view.props.current_browser
         history = browser.get_back_forward_list()
 
-        self._back.props.sensitive = history.get_back_length > 0
-        self._forward.props.sensitive = history.get_forward_length > 0
+        self._back.props.sensitive = history.get_back_length() > 0
+        self._forward.props.sensitive = history.get_forward_length() > 0
 
     def _entry_activate_cb(self, entry):
         browser = self._tabbed_view.props.current_browser
@@ -382,12 +383,10 @@ class PrimaryToolbar(ToolbarBox):
         browser.grab_focus()
 
     def _go_back_cb(self, button):
-        browser = self._tabbed_view.props.current_browser
-        browser.get_back_forward_list().go_back()
+        self._tabbed_view.props.current_browser.go_back()
 
     def _go_forward_cb(self, button):
-        browser = self._tabbed_view.props.current_browser
-        browser.get_back_forward_list().go_forward()
+        self._tabbed_view.props.current_browser.go_forward()
 
     def _title_changed_cb(self, frame, title, user_data):
         self._set_title(title)
@@ -452,7 +451,7 @@ class PrimaryToolbar(ToolbarBox):
     def _history_item_activated_cb(self, menu_item, index):
         browser = self._tabbed_view.props.current_browser
         history = browser.get_back_forward_list()
-        
+
         history.go_to_item(history.get_nth_item(index))
 
     def _link_add_clicked_cb(self, button):

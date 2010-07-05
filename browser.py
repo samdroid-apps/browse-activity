@@ -58,6 +58,7 @@ class TabbedView(gtk.Notebook):
     def new_tab(self, uri=None):
         browser = Browser()
         self._append_tab(browser)
+
         if uri:
             browser.load_uri(uri)# or self.HOME_PAGE)
 
@@ -68,6 +69,9 @@ class TabbedView(gtk.Notebook):
         #set stylesheets
         settings = browser.get_settings()
 
+        # improves browsing on some buggy websites
+        settings.set_property('enable-site-specific-quirks', True)
+
         #if os.path.exists(self.AGENT_SHEET):
         #    # used to disable flash movies until you click them.
         #    settings.set_property('user-stylesheet-uri', 'file:///' +
@@ -76,11 +80,13 @@ class TabbedView(gtk.Notebook):
             settings.set_property('user-stylesheet-uri', 'file:///' +
                                   self.USER_SHEET)
 
-        # improves browsing on some buggy websites
-        settings.set_property('enable-site-specific-quirks', True)
-
-        self.append_page(browser, label)
+        sw = gtk.ScrolledWindow()
+        sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        sw.add(browser)
         browser.show()
+
+        self.append_page(sw, label)
+        sw.show()
 
         self.set_current_page(-1)
         self.props.show_tabs = self.get_n_pages() > 1
@@ -91,7 +97,7 @@ class TabbedView(gtk.Notebook):
         self.props.show_tabs = self.get_n_pages() > 1
 
     def _get_current_browser(self):
-        return self.get_nth_page(self.get_current_page())
+        return self.get_nth_page(self.get_current_page()).get_child()
 
     current_browser = gobject.property(type=object,
                                        getter=_get_current_browser)
@@ -99,7 +105,7 @@ class TabbedView(gtk.Notebook):
     def get_session(self):
         tab_sessions = []
         for index in xrange(0, self.get_n_pages()):
-            browser = self.get_nth_page(index)
+            browser = self.get_nth_page(index).get_child()
             tab_sessions.append(browser.get_session())
         return tab_sessions
 
@@ -163,17 +169,18 @@ class TabLabel(gtk.HBox):
 
     def __browser_loaded_cb(self, browser, load_status):
         browser.connect('notify::uri', self.__location_changed_cb)
-        browser.connect('notify::title', self.__title_changed_cb)
+        browser.connect('title-changed', self.__title_changed_cb)
 
-    def __location_changed_cb(self, browser, uri):
-        sefl._label.set_text(uri)
+    def __location_changed_cb(self, browser, paramspec):
+        self._label.set_text(browser.props.uri)
 
-    def __title_changed_cb(self, browser, title):
+    def __title_changed_cb(self, browser, frame, title):
         self._label.set_text(title)
 
 
 class Browser(webkit.WebView):
     __gtype_name__ = 'Browser'
+    # TODO scrollbars
 
     def __init__(self):
         webkit.WebView.__init__(self)

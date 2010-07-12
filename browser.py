@@ -228,10 +228,11 @@ class Browser(webkit.WebView):
             async_cb(file_path)
 
     def get_session(self):
+        limit = 10
         history = self.get_back_forward_list()
-        history_items = history.get_back_list_with_limit() + \
-                        history.get_current_item() + \
-                        history.get_forward_list_with_limit()
+        history_items = history.get_back_list_with_limit(limit) + \
+                        [history.get_current_item()] + \
+                        history.get_forward_list_with_limit(limit)
 
         entries = []
         for item in history_items:
@@ -239,7 +240,7 @@ class Browser(webkit.WebView):
                      'title':  item.props.title}
             entries.append(entry)
 
-        return entries_dest
+        return entries
     
     def set_session(self, data):
         history = self.get_back_forward_list()

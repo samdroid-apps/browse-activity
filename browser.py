@@ -243,8 +243,16 @@ class Browser(webkit.WebView):
         return entries
     
     def set_session(self, data):
-        history = self.get_back_forward_list()
-        history.clear()
+        history = webkit.WebBackForwardList()
+
+        # webkitgtk+ v1.3.1+
+        #history = self.get_back_forward_list()
+        #history.clear()
+
+        # temporary workaround to clear history
+        limit = history.get_limit()
+        history.set_limit(0)
+        history.set_limit(limit)
 
         for entry_dict in data:
             logging.debug('entry_dict: %r' % entry_dict)

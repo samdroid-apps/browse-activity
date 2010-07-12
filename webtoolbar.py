@@ -68,7 +68,7 @@ class WebEntry(AddressEntry):
            recognize changes caused directly by user actions"""
         self.handler_block(self._change_hid)
         try:
-            self.props.text = text # TODO fix for webkit
+            self.props.text = text
         finally:
             self.handler_unblock(self._change_hid)
         self.set_position(-1)
@@ -223,9 +223,7 @@ class PrimaryToolbar(ToolbarBox):
     __gtype_name__ = 'PrimaryToolbar'
 
     __gsignals__ = {
-        'add-link': (gobject.SIGNAL_RUN_FIRST,
-                     gobject.TYPE_NONE,
-                     ([]))
+        'add-link': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([]))
     }
 
     def __init__(self, tabbed_view, act):
@@ -312,9 +310,9 @@ class PrimaryToolbar(ToolbarBox):
 
         self._location_changed_hid = self._browser.connect(
                 'notify::uri', self.__location_changed_cb)
+        # cannot use notify::load-status until webkitgtk 1.1.7+
         self._loading_changed_hid = self._browser.connect(
                 'load-finished', self.__loading_finished_cb)
-                # cannot use notify::load-status until webkitgtk 1.1.7+
         self._loading_started_hid = self._browser.connect(
                 'load-started', self.__loading_started_cb)
         self._progress_changed_hid = self._browser.connect(

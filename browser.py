@@ -260,7 +260,9 @@ class Browser(webkit.WebView):
             history.add_item(entry)
 
         if data:
-            history.go_to_item(history.get_current_item())
+            # workaround to get the history back on track
+            self.go_back()
+            self.go_forward()
         else:
             self.load_uri('about:blank')
 

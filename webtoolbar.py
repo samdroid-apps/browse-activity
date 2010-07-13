@@ -332,7 +332,6 @@ class PrimaryToolbar(ToolbarBox):
 
     def __loading_finished_cb(self, frame, user_data):
         self._set_loading(False)
-        self._set_progress(1.0)
         self._update_navigation_buttons()
 
     def __progress_changed_cb(self, browser, progress):

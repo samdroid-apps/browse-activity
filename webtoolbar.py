@@ -286,7 +286,8 @@ class PrimaryToolbar(ToolbarBox):
         self._progress_changed_hid = None
         self._title_changed_hid = None
 
-        self._connect_to_browser(tabbed_view.props.current_browser)
+        gobject.idle_add(lambda:
+            self._connect_to_browser(tabbed_view.props.current_browser))
 
         tabbed_view.connect_after('switch-page', self.__switch_page_cb)
 

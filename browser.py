@@ -233,6 +233,8 @@ class Browser(webkit.WebView):
         history_items = history.get_back_list_with_limit(limit) + \
                         [history.get_current_item()] + \
                         history.get_forward_list_with_limit(limit)
+        
+        
 
         entries = []
         for item in history_items:
@@ -240,6 +242,7 @@ class Browser(webkit.WebView):
                      'title':  item.props.title}
             entries.append(entry)
 
+        logging.warning('History: %s' % (entries))
         return entries
     
     def set_session(self, data):
@@ -260,9 +263,7 @@ class Browser(webkit.WebView):
             history.add_item(entry)
 
         if data:
-            # workaround to get the history back on track
-            self.go_back()
-            self.go_forward()
+            self.go_to_back_forward_item(history.get_current_item())
         else:
             self.load_uri('about:blank')
 

@@ -324,6 +324,51 @@ class PrimaryToolbar(ToolbarBox):
 
         logging.warning('Connected to browser.')
 
+    def __location_changed_cb(self, frame):
+        self._set_address(frame.get_uri())
+        self._update_navigation_buttons()
+        filepicker.cleanup_temp_files()
+
+    def __loading_started_cb(self, frame, user_data):
+        self._set_loading(True)
+
+    def __loading_finished_cb(self, frame, user_data):
+        self._set_loading(False)
+        self._update_navigation_buttons()
+
+    def __progress_changed_cb(self, progress, user_data):
+        self._set_progress(progress)
+
+    def _title_changed_cb(self, browser, frame, user_data):
+        self._set_title(frame.get_title())
+
+    def _set_progress(self, progress):
+        self.entry.props.progress = progress
+
+    def _set_address(self, uri):
+        self.entry.props.address = uri
+
+    def _set_title(self, title):
+        self.entry.props.title = title
+
+    def _show_stop_icon(self):
+        self._stop_and_reload.set_icon('media-playback-stop')
+
+    def _show_reload_icon(self):
+        self._stop_and_reload.set_icon('view-refresh')
+
+    def _update_navigation_buttons(self):
+        browser = self._tabbed_view.props.current_browser
+        history = browser.get_back_forward_list()
+
+        self._back.props.sensitive = history.get_back_length() > 0
+        self._forward.props.sensitive = history.get_forward_length() > 0
+
+    def _entry_activate_cb(self, entry):
+        browser = self._tabbed_view.props.current_browser
+        browser.load_uri(entry.props.text)
+        browser.grab_focus()
+
     def _go_back_cb(self, button):
         self._tabbed_view.props.current_browser.go_back()
 

@@ -286,8 +286,7 @@ class PrimaryToolbar(ToolbarBox):
         self._session_history_changed_hid = None
         self._title_changed_hid = None
 
-        gobject.idle_add(lambda:
-                self._connect_to_browser(tabbed_view.props.current_browser))
+        self._connect_to_browser(tabbed_view.props.current_browser)
 
         tabbed_view.connect_after('switch-page', self.__switch_page_cb)
 
@@ -295,18 +294,15 @@ class PrimaryToolbar(ToolbarBox):
         self._connect_to_browser(tabbed_view.props.current_browser)
 
     def _connect_to_browser(self, browser):
-        if self._browser is None:
-            return
+        logging.warning('Connecting to browser...')
+        if self._browser is not None:
+            self._browser.disconnect(self._location_changed_hid)
+            self._browser.disconnect(self._loading_changed_hid)
+            self._browser.disconnect(self._loading_finished_hid)
+            self._browser.disconnect(self._progress_changed_hid)
+            self._browser.disconnect(self._title_changed_hid)
 
-        self._browser.disconnect(self._location_changed_hid)
-        self._browser.disconnect(self._loading_changed_hid)
-        self._browser.disconnect(self._loading_finished_hid)
-        self._browser.disconnect(self._progress_changed_hid)
-
-        self._set_progress(0) # self._browser.props.progress in wkgtk 1.1.7+
-        self._set_address(self._browser.props.uri)
-        self._set_loading(False)
-        self._update_navigation_buttons()
+        self._browser = browser
 
         self._location_changed_hid = self._browser.connect(
                 'notify::uri', self.__location_changed_cb)
@@ -317,77 +313,22 @@ class PrimaryToolbar(ToolbarBox):
                 'load-started', self.__loading_started_cb)
         self._progress_changed_hid = self._browser.connect(
                 'load-progress-changed', self.__progress_changed_cb)
-
-        if self._history is not None:
-            self._history.disconnect(self._session_history_changed_hid)
-
-        self._history = browser.history
-        self._session_history_changed_hid = self._history.connect(
-                'session-history-changed', self._session_history_changed_cb)
-
-        if self._browser is not None:
-            self._browser.disconnect(self._title_changed_hid)
-
-        self._browser = browser
-        self._set_title(self._browser.props.title)
-
         self._title_changed_hid = self._browser.connect(
                 'title-changed', self._title_changed_cb)
 
-    def _session_history_changed_cb(self, session_history, current_page_index):
-        # We have to wait until the history info is updated.
-        gobject.idle_add(self._reload_session_history, current_page_index)
-
-    def __location_changed_cb(self, frame):
-        self._set_address(frame.get_uri())
-        self._update_navigation_buttons()
-        filepicker.cleanup_temp_files()
-
-    def __loading_started_cb(self, frame, user_data):
-        self._set_loading(True)
-
-    def __loading_finished_cb(self, frame, user_data):
+        self._set_progress(0) # self._browser.props.progress in wkgtk 1.1.7+
+        self._set_address(self._browser.props.uri)
+        self._set_title(self._browser.props.title)
         self._set_loading(False)
         self._update_navigation_buttons()
 
-    def __progress_changed_cb(self, progress, user_data):
-        self._set_progress(progress)
-
-    def _set_progress(self, progress):
-        self.entry.props.progress = progress
-
-    def _set_address(self, uri):
-        self.entry.props.address = uri
-
-    def _set_title(self, title):
-        self.entry.props.title = title
-
-    def _show_stop_icon(self):
-        self._stop_and_reload.set_icon('media-playback-stop')
-
-    def _show_reload_icon(self):
-        self._stop_and_reload.set_icon('view-refresh')
-
-    def _update_navigation_buttons(self):
-        browser = self._tabbed_view.props.current_browser
-        history = browser.get_back_forward_list()
-
-        self._back.props.sensitive = history.get_back_length() > 0
-        self._forward.props.sensitive = history.get_forward_length() > 0
-
-    def _entry_activate_cb(self, entry):
-        browser = self._tabbed_view.props.current_browser
-        browser.load_uri(entry.props.text)
-        browser.grab_focus()
+        logging.warning('Connected to browser.')
 
     def _go_back_cb(self, button):
         self._tabbed_view.props.current_browser.go_back()
 
     def _go_forward_cb(self, button):
         self._tabbed_view.props.current_browser.go_forward()
-
-    def _title_changed_cb(self, frame, title, user_data):
-        self._set_title(title)
 
     def _stop_and_reload_cb(self, button):
         browser = self._tabbed_view.props.current_browser

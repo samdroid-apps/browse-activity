@@ -294,7 +294,6 @@ class PrimaryToolbar(ToolbarBox):
         self._connect_to_browser(tabbed_view.props.current_browser)
 
     def _connect_to_browser(self, browser):
-        logging.warning('Connecting to browser...')
         if self._browser is not None:
             self._browser.disconnect(self._location_changed_hid)
             self._browser.disconnect(self._loading_changed_hid)
@@ -322,10 +321,8 @@ class PrimaryToolbar(ToolbarBox):
         self._set_loading(False)
         self._update_navigation_buttons()
 
-        logging.warning('Connected to browser.')
-
-    def __location_changed_cb(self, frame):
-        self._set_address(frame.get_uri())
+    def __location_changed_cb(self, browser, user_data):
+        self._set_address(browser.props.uri)
         self._update_navigation_buttons()
         filepicker.cleanup_temp_files()
 
@@ -336,7 +333,7 @@ class PrimaryToolbar(ToolbarBox):
         self._set_loading(False)
         self._update_navigation_buttons()
 
-    def __progress_changed_cb(self, progress, user_data):
+    def __progress_changed_cb(self, browser, progress):
         self._set_progress(progress)
 
     def _title_changed_cb(self, browser, frame, user_data):

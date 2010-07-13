@@ -243,10 +243,9 @@ class Browser(webkit.WebView):
         return entries
     
     def set_session(self, data):
-        history = webkit.WebBackForwardList()
+        history = self.get_back_forward_list()
 
         # webkitgtk+ v1.3.1+
-        #history = self.get_back_forward_list()
         #history.clear()
 
         # temporary workaround to clear history
@@ -260,10 +259,10 @@ class Browser(webkit.WebView):
             entry = webkit.WebHistoryItem(entry_dict['url'], entry_dict['title'])
             history.add_item(entry)
 
-        #if data:
-        #    history.go_to_item(len(data) - 1)
-        #else:
-        #    self.load_uri('about:blank')
+        if data:
+            history.go_to_item(history.get_current_item())
+        else:
+            self.load_uri('about:blank')
 
 class PopupDialog(gtk.Window):
     def __init__(self):

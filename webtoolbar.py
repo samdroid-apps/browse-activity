@@ -281,9 +281,9 @@ class PrimaryToolbar(ToolbarBox):
         self._browser = None
 
         self._location_changed_hid = None
-        self._loading_changed_hid = None
+        self._loading_finished_hid = None
+        self._loading_started_hid = None
         self._progress_changed_hid = None
-        self._session_history_changed_hid = None
         self._title_changed_hid = None
 
         self._connect_to_browser(tabbed_view.props.current_browser)
@@ -296,7 +296,7 @@ class PrimaryToolbar(ToolbarBox):
     def _connect_to_browser(self, browser):
         if self._browser is not None:
             self._browser.disconnect(self._location_changed_hid)
-            self._browser.disconnect(self._loading_changed_hid)
+            self._browser.disconnect(self._loading_started_hid)
             self._browser.disconnect(self._loading_finished_hid)
             self._browser.disconnect(self._progress_changed_hid)
             self._browser.disconnect(self._title_changed_hid)
@@ -306,7 +306,7 @@ class PrimaryToolbar(ToolbarBox):
         self._location_changed_hid = self._browser.connect(
                 'notify::uri', self.__location_changed_cb)
         # cannot use notify::load-status until webkitgtk 1.1.7+
-        self._loading_changed_hid = self._browser.connect(
+        self._loading_finished_hid = self._browser.connect(
                 'load-finished', self.__loading_finished_cb)
         self._loading_started_hid = self._browser.connect(
                 'load-started', self.__loading_started_cb)
@@ -334,7 +334,7 @@ class PrimaryToolbar(ToolbarBox):
         self._update_navigation_buttons()
 
     def __progress_changed_cb(self, browser, progress):
-        self._set_progress(progress)
+        self._set_progress(progress / 100.0)
 
     def _title_changed_cb(self, browser, frame, user_data):
         self._set_title(frame.get_title())

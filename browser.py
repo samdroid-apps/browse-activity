@@ -45,7 +45,6 @@ class TabbedView(gtk.Notebook):
     #                           'agent-stylesheet.css')
     USER_SHEET = os.path.join(env.get_profile_path(), 'webkit',
                               'user-stylesheet.css')
-    #HOME_PAGE = 'http://sugarlabs.org'
 
     def __init__(self):
         gobject.GObject.__init__(self)
@@ -60,7 +59,7 @@ class TabbedView(gtk.Notebook):
         self._append_tab(browser)
 
         if uri:
-            browser.load_uri(uri)# or self.HOME_PAGE)
+            browser.load_uri(uri)
 
     def _append_tab(self, browser):
         label = TabLabel(browser)
@@ -71,6 +70,9 @@ class TabbedView(gtk.Notebook):
 
         # improves browsing on some buggy websites
         settings.set_property('enable-site-specific-quirks', True)
+
+        # enable full page zoom
+        browser.set_full_content_zoom(True)
 
         #if os.path.exists(self.AGENT_SHEET):
         #    # used to disable flash movies until you click them.
@@ -180,7 +182,6 @@ class TabLabel(gtk.HBox):
 
 class Browser(webkit.WebView):
     __gtype_name__ = 'Browser'
-    # TODO scrollbars
 
     def __init__(self):
         webkit.WebView.__init__(self)
@@ -228,13 +229,12 @@ class Browser(webkit.WebView):
             async_cb(file_path)
 
     def get_session(self):
-        limit = 10
         history = self.get_back_forward_list()
+        limit = history.get_limit()
+
         history_items = history.get_back_list_with_limit(limit) + \
                         [history.get_current_item()] + \
                         history.get_forward_list_with_limit(limit)
-        
-        
 
         entries = []
         for item in history_items:

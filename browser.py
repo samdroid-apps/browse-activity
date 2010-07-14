@@ -212,7 +212,7 @@ class Browser(webkit.WebView):
         self._loaded = True
 
     def get_source(self, async_cb, async_err_cb):
-        if self._loaded:
+        if not self._loaded:
             async_err_cb()
 
         else:

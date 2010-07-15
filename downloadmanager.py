@@ -53,9 +53,11 @@ _active_downloads = []
 _dest_to_window = {}
 
 
-# HACK: pywebkitgtk is missing the WebKitDownloadStatus
+# HACK: pywebkitgtk is missing the WebKitDownloadStatus enum
 webkit.WebKitDownloadStatus = type(webkit.Download().get_status())
 
+webkit.DOWNLOAD_STATUS_ERROR = webkit.WebKitDownloadStatus(-1)
+webkit.DOWNLOAD_STATUS_CREATED = webkit.WebKitDownloadStatus(0)
 webkit.DOWNLOAD_STATUS_STARTED = webkit.WebKitDownloadStatus(1)
 webkit.DOWNLOAD_STATUS_FINISHED  = webkit.WebKitDownloadStatus(3)
 webkit.DOWNLOAD_STATUS_CANCELLED  = webkit.WebKitDownloadStatus(2)
@@ -145,6 +147,7 @@ class UserDownload(object):
 
             #if self._mime_type in ['application/octet-stream',
             #                       'application/x-zip']:
+            # sniff for a mime type, no way to get headers from pywebkitgtk
             sniffed_mime_type = mime.get_for_file(self._dest_uri)
             self.dl_jobject.metadata['mime_type'] = sniffed_mime_type
 
@@ -203,11 +206,11 @@ class UserDownload(object):
 
     def _get_file_name(self):
         src = urlparse.urlparse(self._source)
-        
+
         if src.scheme == 'data':
             return 'Data URI'
         else:
-            return self._download.get_suggested_filename() 
+            return self._download.get_suggested_filename()
 
     def _create_journal_object(self):
         self.dl_jobject = datastore.create()

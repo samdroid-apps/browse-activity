@@ -150,15 +150,22 @@ class UserDownload(object):
 
             datastore.write(self.dl_jobject,
                             transfer_ownership=True,
-                            reply_handler=self._internal_save_cb,
-                            error_handler=self._internal_save_error_cb,
+                            reply_handler=self.__internal_save_cb,
+                            error_handler=self.__internal_error_cb,
                             timeout=360 * DBUS_PYTHON_TIMEOUT_UNITS_PER_SECOND)
 
         elif state == webkit.DOWNLOAD_STATUS_CANCELLED:
             self.cleanup_datastore_write()
 
     def __error_cb(self, err_code, err_detail, reason, user_data):
-        logging.debug("Error saving activity object to datastore: %s" % reason)
+        logging.debug("Error downloading URI: %s" % reason)
+        self.cleanup_datastore_write()
+
+    def __internal_save_cb(self):
+        self.cleanup_datastore_write()
+
+    def __internal_error_cb(self, err):
+        logging.debug("Error saving activity object to datastore: %s" % err)
         self.cleanup_datastore_write()
 
     def __start_response_cb(self, alert, response_id):

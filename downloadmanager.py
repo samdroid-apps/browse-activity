@@ -210,6 +210,9 @@ class UserDownload(object):
         self.dl_jobject.destroy()
         self.dl_jobject = None
 
+    def cancel(self):
+        self._download.cancel()
+
     def _get_file_name(self):
         src = urlparse.urlparse(self._source)
 

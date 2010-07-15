@@ -93,14 +93,19 @@ class UserDownload(object):
         self._stop_alert = None
 
         # figure out download URI
-        self._dest_uri = os.path.join(activity.get_activity_root(), 'instance',
-                                      download.get_suggested_filename())
+        temp_path = os.path.join(activity.get_activity_root(), 'instance')
+        if not os.path.exists(temp_path):
+            os.makedirs(temp_path)
 
-        if not os.path.exists(self._dest_uri):
-            os.makedirs(self._dest_uri)
+        fd, self._dest_path = tempfile.mkstemp(dir=temp_path,
+                                    suffix=download.get_suggested_filename(),
+                                    prefix='tmp')
+        os.close(fd)
+
+        logging.debug('Download destination path: %s' % self._dest_path)
 
         # start download
-        self._download.set_destination_uri(self._dest_uri)
+        self._download.set_destination_uri(self._dest_path)
         self._download.start()
 
     def __progress_change_cb(self, download, something):
@@ -111,7 +116,6 @@ class UserDownload(object):
     def __state_change_cb(self, download, gparamspec):
         state = self._download.get_status()
         if state == webkit.DOWNLOAD_STATUS_STARTED:
-            print 'creating journal object'
             self._create_journal_object()
             self._object_id = self.dl_jobject.object_id
 
@@ -143,12 +147,12 @@ class UserDownload(object):
             self.dl_jobject.metadata['description'] = _('From: %s') \
                 % self._source
             self.dl_jobject.metadata['progress'] = '100'
-            self.dl_jobject.file_path = self._dest_uri
+            self.dl_jobject.file_path = self._dest_path
 
             #if self._mime_type in ['application/octet-stream',
             #                       'application/x-zip']:
             # sniff for a mime type, no way to get headers from pywebkitgtk
-            sniffed_mime_type = mime.get_for_file(self._dest_uri)
+            sniffed_mime_type = mime.get_for_file(self._dest_path)
             self.dl_jobject.metadata['mime_type'] = sniffed_mime_type
 
             datastore.write(self.dl_jobject,
@@ -160,15 +164,16 @@ class UserDownload(object):
         elif state == webkit.DOWNLOAD_STATUS_CANCELLED:
             self.cleanup_datastore_write()
 
-    def __error_cb(self, err_code, err_detail, reason, user_data):
-        logging.debug("Error downloading URI: %s" % reason)
-        self.cleanup_datastore_write()
+    def __error_cb(self, download, err_code, err_detail, reason):
+        logging.debug('Error downloading URI code %s, detail %s: %s'
+                       % (err_code, err_detail, reason))
 
     def __internal_save_cb(self):
+        logging.debug('Object saved succesfully to the datastore.')
         self.cleanup_datastore_write()
 
     def __internal_error_cb(self, err):
-        logging.debug("Error saving activity object to datastore: %s" % err)
+        logging.debug('Error saving activity object to datastore: %s' % err)
         self.cleanup_datastore_write()
 
     def __start_response_cb(self, alert, response_id):
@@ -197,7 +202,8 @@ class UserDownload(object):
 
     def cleanup_datastore_write(self):
         global _active_downloads
-        _active_downloads.remove(self)
+        if self in _active_downloads:
+            _active_downloads.remove(self)
 
         if os.path.isfile(self.dl_jobject.file_path):
             os.remove(self.dl_jobject.file_path)

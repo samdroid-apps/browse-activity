@@ -194,6 +194,8 @@ class Browser(webkit.WebView):
         
         self.connect('load-finished', self.__loading_finished_cb)
         self.connect('download-requested', self.__download_requested_cb)
+        self.connect('mime-type-policy-decision-requested',
+                     self.__mime_type_policy_cb)
 
     def load_uri(self, uri):
         '''Load a URI.
@@ -207,7 +209,14 @@ class Browser(webkit.WebView):
         super(Browser, self).load_uri(uri)
 
     def __download_requested_cb(self, browser, download):
-        user_download = downloadmanager.UserDownload(download, self._activity_p)
+        downloadmanager.process_download(download, self._activity_p)
+        return True
+
+    def __mime_type_policy_cb(self, webview, frame, request, mimetype,
+                              policy_decision):
+        if not self.can_show_mime_type(mimetype):
+            policy_decision.download()
+
         return True
     
     def __loading_finished_cb(self, frame, user_data):

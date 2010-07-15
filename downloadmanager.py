@@ -251,6 +251,8 @@ class UserDownload(object):
             self.cancel()
             _active_downloads.remove(self)
 
-def save_link(uri, title, owner_doc):
-    #TODO
-    pass
+#def save_link(uri, title, mime_type=None):
+#    pass
+
+def process_download(download, activity):    
+    user_download = UserDownload(download, activity)

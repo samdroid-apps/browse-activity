@@ -75,6 +75,7 @@ def remove_all_downloads():
 class UserDownload(object):
     def __init__(self, download, activity_p):
         self._download = download
+        self._activity = activity_p
         self._source = download.get_uri()
 
         self._download.connect('notify::progress', self.__progress_change_cb)
@@ -95,10 +96,6 @@ class UserDownload(object):
 
         if not os.path.exists(self._dest_uri):
             os.makedirs(self._dest_uri)
-
-        # FIXME
-        self._mime_type = 'image/jpeg'
-        self._activity = activity_p
 
         # start download
         self._download.set_destination_uri(self._dest_uri)
@@ -146,10 +143,10 @@ class UserDownload(object):
             self.dl_jobject.metadata['progress'] = '100'
             self.dl_jobject.file_path = self._dest_uri
 
-            if self._mime_type in ['application/octet-stream',
-                                   'application/x-zip']:
-                sniffed_mime_type = mime.get_for_file(self._dest_uri)
-                self.dl_jobject.metadata['mime_type'] = sniffed_mime_type
+            #if self._mime_type in ['application/octet-stream',
+            #                       'application/x-zip']:
+            sniffed_mime_type = mime.get_for_file(self._dest_uri)
+            self.dl_jobject.metadata['mime_type'] = sniffed_mime_type
 
             datastore.write(self.dl_jobject,
                             transfer_ownership=True,
@@ -160,7 +157,7 @@ class UserDownload(object):
         elif state == webkit.DOWNLOAD_STATUS_CANCELLED:
             self.cleanup_datastore_write()
 
-    def __error_cb(self, download, err_code, err_detail, reason, user_data):
+    def __error_cb(self, err_code, err_detail, reason, user_data):
         logging.debug("Error saving activity object to datastore: %s" % reason)
         self.cleanup_datastore_write()
 

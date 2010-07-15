@@ -213,7 +213,7 @@ class UserDownload(object):
         self.dl_jobject.metadata['preview'] = ''
         self.dl_jobject.metadata['icon-color'] = \
                 profile.get_color().to_string()
-        self.dl_jobject.metadata['mime_type'] = self._mime_type
+        self.dl_jobject.metadata['mime_type'] = ''
         self.dl_jobject.file_path = ''
         datastore.write(self.dl_jobject)
 

@@ -536,7 +536,7 @@ class WebActivity(activity.Activity):
         elif response_id == gtk.RESPONSE_OK:
             logging.debug('Stop downloads and quit')
             downloadmanager.remove_all_downloads()
-            self.close(force=True)
+            self.close()
 
     def get_document_path(self, async_cb, async_err_cb):
         browser = self._tabbed_view.props.current_browser

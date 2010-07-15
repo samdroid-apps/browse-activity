@@ -105,7 +105,7 @@ class UserDownload(object):
         logging.debug('Download destination path: %s' % self._dest_path)
 
         # start download
-        self._download.set_destination_uri(self._dest_path)
+        self._download.set_destination_uri('file://' + self._dest_path)
         self._download.start()
 
     def __progress_change_cb(self, download, something):
@@ -229,7 +229,7 @@ class UserDownload(object):
         self.dl_jobject.metadata['preview'] = ''
         self.dl_jobject.metadata['icon-color'] = \
                 profile.get_color().to_string()
-        self.dl_jobject.metadata['mime_type'] = ''
+        self.dl_jobject.metadata['mime_type'] = '' # TODO mime from headers
         self.dl_jobject.file_path = ''
         datastore.write(self.dl_jobject)
 

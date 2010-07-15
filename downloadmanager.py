@@ -79,9 +79,7 @@ class UserDownload(object):
 
         self._download.connect('notify::progress', self.__progress_change_cb)
         self._download.connect('notify::status', self.__state_change_cb)
-
-        # FIXME
-        #self._download.connect('error', self.__error_cb)
+        self._download.connect('error', self.__error_cb)
 
         self.datastore_deleted_handler = None
 
@@ -108,7 +106,7 @@ class UserDownload(object):
 
     def __progress_change_cb(self, download, something):
         progress = self._download.get_progress()
-        self.dl_jobject.metadata['progress'] = str(int(progress))
+        self.dl_jobject.metadata['progress'] = str(int(progress * 100))
         datastore.write(self.dl_jobject)
 
     def __state_change_cb(self, download, gparamspec):

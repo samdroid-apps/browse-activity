@@ -34,6 +34,7 @@ from sugar.activity import activity
 from sugar.graphics import style
 
 from palettes import ContentInvoker
+import downloadmanager
 
 _ZOOM_AMOUNT = 0.1
 
@@ -46,16 +47,17 @@ class TabbedView(gtk.Notebook):
     USER_SHEET = os.path.join(env.get_profile_path(), 'webkit',
                               'user-stylesheet.css')
 
-    def __init__(self):
+    def __init__(self, activity_p):
         gobject.GObject.__init__(self)
 
         self.props.show_border = False
         self.props.scrollable = True
+        self._activity_p = activity_p
 
         self.new_tab()
 
     def new_tab(self, uri=None):
-        browser = Browser()
+        browser = Browser(self._activity_p)
         self._append_tab(browser)
 
         if uri:
@@ -120,7 +122,7 @@ class TabbedView(gtk.Notebook):
             self.remove_page(self.get_n_pages() - 1)
 
         for tab_session in tab_sessions:
-            browser = Browser()
+            browser = Browser(self._activity_p)
             self._append_tab(browser)
             browser.set_session(tab_session)
 
@@ -183,8 +185,10 @@ class TabLabel(gtk.HBox):
 class Browser(webkit.WebView):
     __gtype_name__ = 'Browser'
 
-    def __init__(self):
+    def __init__(self, activity_p):
         webkit.WebView.__init__(self)
+
+        self._activity_p = activity_p
         
         self._loaded = False # needed until webkitgtk 1.1.7+
         
@@ -202,10 +206,8 @@ class Browser(webkit.WebView):
 
         super(Browser, self).load_uri(uri)
 
-    def __download_requested_cb(self, download, user_data):
-        #TODO download ui
-        user_download = downloadmanager.UserDownload(download)
-
+    def __download_requested_cb(self, browser, download):
+        user_download = downloadmanager.UserDownload(download, self._activity_p)
         return True
     
     def __loading_finished_cb(self, frame, user_data):

@@ -173,7 +173,7 @@ class WebActivity(activity.Activity):
 
         _logger.debug('Starting the web activity')
 
-        self._tabbed_view = TabbedView()
+        self._tabbed_view = TabbedView(self)
 
         _set_accept_languages()
         _seed_xs_cookie()

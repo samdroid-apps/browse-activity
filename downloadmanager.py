@@ -32,6 +32,8 @@ from sugar.graphics.alert import Alert, TimeoutAlert
 from sugar.graphics.icon import Icon
 from sugar.activity import activity
 
+import webkit
+
 # #3903 - this constant can be removed and assumed to be 1 when dbus-python
 # 0.82.3 is the only version used
 import dbus
@@ -51,6 +53,13 @@ _active_downloads = []
 _dest_to_window = {}
 
 
+# HACK: pywebkitgtk is missing the WebKitDownloadStatus
+webkit.WebKitDownloadStatus = type(webkit.Download().get_status())
+
+webkit.DOWNLOAD_STATUS_STARTED = webkit.WebKitDownloadStatus(1)
+webkit.DOWNLOAD_STATUS_FINISHED  = webkit.WebKitDownloadStatus(3)
+webkit.DOWNLOAD_STATUS_CANCELLED  = webkit.WebKitDownloadStatus(2)
+
 def can_quit():
     return len(_active_downloads) == 0
 
@@ -64,13 +73,15 @@ def remove_all_downloads():
             download.cleanup_datastore_write()
 
 class UserDownload(object):
-    def __init__(self, download):
+    def __init__(self, download, activity_p):
         self._download = download
         self._source = download.get_uri()
 
         self._download.connect('notify::progress', self.__progress_change_cb)
         self._download.connect('notify::status', self.__state_change_cb)
-        self._download.connect('error', self.__error_cb)
+
+        # FIXME
+        #self._download.connect('error', self.__error_cb)
 
         self.datastore_deleted_handler = None
 
@@ -82,21 +93,28 @@ class UserDownload(object):
 
         # figure out download URI
         self._dest_uri = os.path.join(activity.get_activity_root(), 'instance',
-                                      download.props.suggested_filename)
+                                      download.get_suggested_filename())
 
         if not os.path.exists(self._dest_uri):
             os.makedirs(self._dest_uri)
+
+        # FIXME
+        self._mime_type = 'image/jpeg'
+        self._activity = activity_p
 
         # start download
         self._download.set_destination_uri(self._dest_uri)
         self._download.start()
 
-    def __progress_change_cb(self, download, progress):
-        self.dl_jobject.metadata['progress'] = str(int(progress * 100))
+    def __progress_change_cb(self, download, something):
+        progress = self._download.get_progress()
+        self.dl_jobject.metadata['progress'] = str(int(progress))
         datastore.write(self.dl_jobject)
 
-    def __state_change_cb(self, download, state):
+    def __state_change_cb(self, download, gparamspec):
+        state = self._download.get_status()
         if state == webkit.DOWNLOAD_STATUS_STARTED:
+            print 'creating journal object'
             self._create_journal_object()
             self._object_id = self.dl_jobject.object_id
 

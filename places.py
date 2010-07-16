@@ -24,9 +24,9 @@ _store = None
 
 
 class Place(object):
-    def __init__(self, uri, title):
-        self.uri = None
-        self.title = None
+    def __init__(self, uri=None, title=None):
+        self.uri = uri
+        self.title = title
         self.bookmark = False
         self.visits = 0
         self.last_visit = datetime.now()

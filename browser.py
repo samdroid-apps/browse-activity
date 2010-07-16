@@ -221,11 +221,11 @@ class Browser(webkit.WebView):
 
         return True
     
-    def __loading_finished_cb(self, frame, user_data):
+    def __loading_finished_cb(self, browser, frame):
         self._loaded = True
 
-    def __loading_committed_cb(self, frame, user_data):
-        place = places.Place(frame.get_uri(), frame.get_title())
+    def __loading_committed_cb(self, browser, frame):
+        place = places.Place(browser.props.uri, browser.props.title)
         places.get_store().add_place(place)
 
     def get_source(self, async_cb, async_err_cb):

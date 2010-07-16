@@ -239,12 +239,12 @@ class PrimaryToolbar(ToolbarBox):
         self.toolbar.insert(activity_button, 0)
 
         self._stop_and_reload = ToolButton('media-playback-stop')
-        self._stop_and_reload.connect('clicked', self._stop_and_reload_cb)
+        self._stop_and_reload.connect('clicked', self.__stop_and_reload_cb)
         self.toolbar.insert(self._stop_and_reload, -1)
         self._stop_and_reload.show()
 
         self.entry = WebEntry()
-        self.entry.connect('activate', self._entry_activate_cb)
+        self.entry.connect('activate', self.__entry_activate_cb)
 
         entry_item = gtk.ToolItem()
         entry_item.set_expand(True)
@@ -257,20 +257,20 @@ class PrimaryToolbar(ToolbarBox):
         self._back = ToolButton('go-previous-paired')
         self._back.set_tooltip(_('Back'))
         self._back.props.sensitive = False
-        self._back.connect('clicked', self._go_back_cb)
+        self._back.connect('clicked', self.__go_back_cb)
         self.toolbar.insert(self._back, -1)
         self._back.show()
 
         self._forward = ToolButton('go-next-paired')
         self._forward.set_tooltip(_('Forward'))
         self._forward.props.sensitive = False
-        self._forward.connect('clicked', self._go_forward_cb)
+        self._forward.connect('clicked', self.__go_forward_cb)
         self.toolbar.insert(self._forward, -1)
         self._forward.show()
 
         self._link_add = ToolButton('emblem-favorite')
         self._link_add.set_tooltip(_('Bookmark'))
-        self._link_add.connect('clicked', self._link_add_clicked_cb)
+        self._link_add.connect('clicked', self.__link_add_clicked_cb)
         self.toolbar.insert(self._link_add, -1)
         self._link_add.show()
 
@@ -314,7 +314,7 @@ class PrimaryToolbar(ToolbarBox):
         self._progress_changed_hid = self._browser.connect(
                 'load-progress-changed', self.__progress_changed_cb)
         self._title_changed_hid = self._browser.connect(
-                'title-changed', self._title_changed_cb)
+                'title-changed', self.__title_changed_cb)
 
         self._set_progress(0) # self._browser.props.progress in wkgtk 1.1.7+
         self._set_address(self._browser.props.uri)
@@ -337,7 +337,7 @@ class PrimaryToolbar(ToolbarBox):
     def __progress_changed_cb(self, browser, progress):
         self._set_progress(progress / 100.0)
 
-    def _title_changed_cb(self, browser, frame, user_data):
+    def __title_changed_cb(self, browser, frame, user_data):
         self._set_title(frame.get_title())
 
     def _set_progress(self, progress):
@@ -361,18 +361,18 @@ class PrimaryToolbar(ToolbarBox):
         self._back.props.sensitive = browser.can_go_back()
         self._forward.props.sensitive = browser.can_go_forward()
 
-    def _entry_activate_cb(self, entry):
+    def __entry_activate_cb(self, entry):
         browser = self._tabbed_view.props.current_browser
         browser.load_uri(entry.props.text)
         browser.grab_focus()
 
-    def _go_back_cb(self, button):
+    def __go_back_cb(self, button):
         self._tabbed_view.props.current_browser.go_back()
 
-    def _go_forward_cb(self, button):
+    def __go_forward_cb(self, button):
         self._tabbed_view.props.current_browser.go_forward()
 
-    def _stop_and_reload_cb(self, button):
+    def __stop_and_reload_cb(self, button):
         browser = self._tabbed_view.props.current_browser
         if self._loading:
             browser.stop()
@@ -390,10 +390,9 @@ class PrimaryToolbar(ToolbarBox):
             self._stop_and_reload.set_tooltip(_('Reload'))
 
     def _reload_session_history(self, current_page_index=None):
-        #TODO port to webkit. not sure if it's even needed
-        #browser = self._tabbed_view.props.current_browser
-        #history = browser.get_back_forward_list()
-        #
+        browser = self._tabbed_view.props.current_browser
+        history = browser.get_back_forward_list()
+
         #if current_page_index is None:
         #    current_page_index = session_history.index
         #
@@ -417,7 +416,7 @@ class PrimaryToolbar(ToolbarBox):
         #
         #    entry = session_history.getEntryAtIndex(i, False)
         #    menu_item = MenuItem(entry.title, text_maxlen=60)
-        #    menu_item.connect('activate', self._history_item_activated_cb, i)
+        #    menu_item.connect('activate', self.__history_item_activated_cb, i)
         #
         #    if i < current_page_index:
         #        palette = self._back.get_palette()
@@ -427,13 +426,12 @@ class PrimaryToolbar(ToolbarBox):
         #        palette.menu.append(menu_item)
         #
         #    menu_item.show()
-        pass
 
-    def _history_item_activated_cb(self, menu_item, index):
+    def __history_item_activated_cb(self, menu_item, index):
         browser = self._tabbed_view.props.current_browser
         history = browser.get_back_forward_list()
 
-        history.go_to_item(history.get_nth_item(index))
+        browser.go_to_back_forward_item(history.get_nth_item(index))
 
-    def _link_add_clicked_cb(self, button):
+    def __link_add_clicked_cb(self, button):
         self.emit('add-link')

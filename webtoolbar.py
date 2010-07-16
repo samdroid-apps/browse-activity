@@ -329,6 +329,7 @@ class PrimaryToolbar(ToolbarBox):
 
     def __loading_started_cb(self, frame, user_data):
         self._set_loading(True)
+        self._reload_session_history()
 
     def __loading_finished_cb(self, frame, user_data):
         self._set_loading(False)
@@ -389,49 +390,30 @@ class PrimaryToolbar(ToolbarBox):
             self._show_reload_icon()
             self._stop_and_reload.set_tooltip(_('Reload'))
 
-    def _reload_session_history(self, current_page_index=None):
+    def _reload_session_history(self):
         browser = self._tabbed_view.props.current_browser
         history = browser.get_back_forward_list()
+        limit = history.get_limit()
 
-        #if current_page_index is None:
-        #    current_page_index = session_history.index
-        #
-        #for palette in (self._back.get_palette(), self._forward.get_palette()):
-        #    for menu_item in palette.menu.get_children():
-        #        palette.menu.remove(menu_item)
-        #
-        #if current_page_index > _MAX_HISTORY_ENTRIES:
-        #    bottom = current_page_index - _MAX_HISTORY_ENTRIES
-        #else:
-        #    bottom = 0
-        #if  (session_history.count - current_page_index) > \
-        #       _MAX_HISTORY_ENTRIES:
-        #    top = current_page_index + _MAX_HISTORY_ENTRIES + 1
-        #else:
-        #    top = session_history.count
-        #
-        #for i in range(bottom, top):
-        #    if i == current_page_index:
-        #        continue
-        #
-        #    entry = session_history.getEntryAtIndex(i, False)
-        #    menu_item = MenuItem(entry.title, text_maxlen=60)
-        #    menu_item.connect('activate', self.__history_item_activated_cb, i)
-        #
-        #    if i < current_page_index:
-        #        palette = self._back.get_palette()
-        #        palette.menu.prepend(menu_item)
-        #    elif i > current_page_index:
-        #        palette = self._forward.get_palette()
-        #        palette.menu.append(menu_item)
-        #
-        #    menu_item.show()
+        # clear the palettes
+        for palette in (self._back.get_palette(), self._forward.get_palette()):
+            for menu_item in palette.menu.get_children():
+                palette.menu.remove(menu_item)
 
-    def __history_item_activated_cb(self, menu_item, index):
+        # (re)populate the palettes
+        for item in history.get_back_list_with_limit(limit) + \
+                    history.get_forward_list_with_limit(limit):
+            menu_item = MenuItem(item.get_title(), text_maxlen=60)
+            menu_item.connect('activate', self.__history_item_activated_cb,
+                              item)
+
+            palette = self._back.get_palette()
+            palette.menu.append(menu_item)
+            menu_item.show()
+
+    def __history_item_activated_cb(self, menu_item, history_item):
         browser = self._tabbed_view.props.current_browser
-        history = browser.get_back_forward_list()
-
-        browser.go_to_back_forward_item(history.get_nth_item(index))
+        browser.go_to_back_forward_item(history_item)
 
     def __link_add_clicked_cb(self, button):
         self.emit('add-link')

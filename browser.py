@@ -35,6 +35,7 @@ from sugar.graphics import style
 
 from palettes import ContentInvoker
 import downloadmanager
+import places
 
 _ZOOM_AMOUNT = 0.1
 
@@ -193,6 +194,7 @@ class Browser(webkit.WebView):
         self._loaded = False # needed until webkitgtk 1.1.7+
         
         self.connect('load-finished', self.__loading_finished_cb)
+        self.connect('load-committed', self.__loading_committed_cb)
         self.connect('download-requested', self.__download_requested_cb)
         self.connect('mime-type-policy-decision-requested',
                      self.__mime_type_policy_cb)
@@ -221,6 +223,10 @@ class Browser(webkit.WebView):
     
     def __loading_finished_cb(self, frame, user_data):
         self._loaded = True
+
+    def __loading_committed_cb(self, frame, user_data):
+        place = places.Place(frame.get_uri(), frame.get_title())
+        places.get_store().add_place(place)
 
     def get_source(self, async_cb, async_err_cb):
         if not self._loaded:

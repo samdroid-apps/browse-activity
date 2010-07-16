@@ -186,6 +186,7 @@ class UserDownload(object):
                 datastore.delete(self._object_id)
             except Exception, e:
                 logging.warning('Object has been deleted already %s' % e)
+
             if self.dl_jobject is not None:
                 self.cleanup_datastore_write()
             if self._stop_alert is not None:
@@ -249,7 +250,6 @@ class UserDownload(object):
         global _active_downloads
         if self in _active_downloads:
             self.cancel()
-            _active_downloads.remove(self)
 
 #def save_link(uri, title, mime_type=None):
 #    pass

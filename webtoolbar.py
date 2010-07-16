@@ -314,7 +314,7 @@ class PrimaryToolbar(ToolbarBox):
         self._loading_started_hid = self._browser.connect(
                 'load-started', self.__loading_started_cb)
         self._loading_commited_hid = self._browser.connect(
-                'load-commited', self__loading_commited_cb)
+                'load-commited', self.__loading_commited_cb)
         self._progress_changed_hid = self._browser.connect(
                 'load-progress-changed', self.__progress_changed_cb)
         self._title_changed_hid = self._browser.connect(

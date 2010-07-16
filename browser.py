@@ -243,9 +243,13 @@ class Browser(webkit.WebView):
         history = self.get_back_forward_list()
         limit = history.get_limit()
 
-        history_items = history.get_back_list_with_limit(limit) + \
-                        [history.get_current_item()] + \
-                        history.get_forward_list_with_limit(limit)
+        back_list = history.get_back_list_with_limit(limit)
+        back_list.reverse()
+        forward_list = history.get_forward_list_with_limit(limit)
+        forward_list.reverse()
+
+        history_items = back_list + [history.get_current_item()] + \
+                        forward_list
 
         entries = []
         for item in history_items:

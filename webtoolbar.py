@@ -283,7 +283,7 @@ class PrimaryToolbar(ToolbarBox):
         self._location_changed_hid = None
         self._loading_finished_hid = None
         self._loading_started_hid = None
-        self._loading_commited_hid = None
+        self._loading_committed_hid = None
         self._progress_changed_hid = None
         self._title_changed_hid = None
 
@@ -300,7 +300,7 @@ class PrimaryToolbar(ToolbarBox):
             self._browser.disconnect(self._location_changed_hid)
             self._browser.disconnect(self._loading_started_hid)
             self._browser.disconnect(self._loading_finished_hid)
-            self._browser.disconnect(self._loading_commited_hid)
+            self._browser.disconnect(self._loading_committed_hid)
             self._browser.disconnect(self._progress_changed_hid)
             self._browser.disconnect(self._title_changed_hid)
 
@@ -313,8 +313,8 @@ class PrimaryToolbar(ToolbarBox):
                 'load-finished', self.__loading_finished_cb)
         self._loading_started_hid = self._browser.connect(
                 'load-started', self.__loading_started_cb)
-        self._loading_commited_hid = self._browser.connect(
-                'load-commited', self.__loading_commited_cb)
+        self._loading_committed_hid = self._browser.connect(
+                'load-committed', self.__loading_committed_cb)
         self._progress_changed_hid = self._browser.connect(
                 'load-progress-changed', self.__progress_changed_cb)
         self._title_changed_hid = self._browser.connect(
@@ -338,7 +338,7 @@ class PrimaryToolbar(ToolbarBox):
         self._set_loading(False)
         self._update_navigation_buttons()
 
-    def __loading_commited_cb(self, frame, user_data):
+    def __loading_committed_cb(self, frame, user_data):
        self._reload_session_history() 
 
     def __progress_changed_cb(self, browser, progress):

@@ -401,13 +401,21 @@ class PrimaryToolbar(ToolbarBox):
                 palette.menu.remove(menu_item)
 
         # (re)populate the palettes
-        for item in history.get_back_list_with_limit(limit) + \
-                    history.get_forward_list_with_limit(limit):
+        for item in history.get_back_list_with_limit(limit):
             menu_item = MenuItem(item.get_title(), text_maxlen=60)
             menu_item.connect('activate', self.__history_item_activated_cb,
                               item)
 
             palette = self._back.get_palette()
+            palette.menu.append(menu_item)
+            menu_item.show()
+
+        for item in history.get_forward_list_with_limit(limit):
+            menu_item = MenuItem(item.get_title(), text_maxlen=60)
+            menu_item.connect('activate', self.__history_item_activated_cb,
+                              item)
+
+            palette = self._forward.get_palette()
             palette.menu.append(menu_item)
             menu_item.show()
 

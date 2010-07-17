@@ -162,7 +162,7 @@ class WebEntry(AddressEntry):
     def __view_button_press_event_cb(self, view, event):
         model = view.get_model()
 
-        path, col_, x_, y_ = view.get_path_at_pos(event.x, event.y)
+        path, col_, x_, y_ = view.get_path_at_pos(int(event.x), int(event.y))
         if path:
             uri = model[path][self._COL_ADDRESS]
             self.activate(uri)
@@ -410,7 +410,7 @@ class PrimaryToolbar(ToolbarBox):
 
         def populate(history_list, palette):
             for history_item in history_list:
-                menu_item = MenuItem(item.get_title(), text_maxlen=60)
+                menu_item = MenuItem(history_item.get_title(), text_maxlen=60)
                 menu_item.connect('activate', self.__history_item_activated_cb,
                                   history_item)
     

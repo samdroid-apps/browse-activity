@@ -76,7 +76,7 @@ class SqliteStore(object):
                            'order by visits desc limit 0, ?',
                            (text, text, self.MAX_SEARCH_MATCHES))
 
-            result = [self._place_from_row(row) for row in cursor]
+            result = [Place.from_row(row) for row in cursor]
         finally:
             cursor.close()
 

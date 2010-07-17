@@ -404,27 +404,21 @@ class PrimaryToolbar(ToolbarBox):
         back_palette = self._back.get_palette()
         forward_palette = self._forward.get_palette()
 
-        # clear the palettes
         for palette in (back_palette, forward_palette):
             for menu_item in palette.menu.get_children():
                 palette.menu.remove(menu_item)
 
-        # (re)populate the palettes
-        for item in list(history.get_back_list_with_limit(limit)):
-            menu_item = MenuItem(item.get_title(), text_maxlen=60)
-            menu_item.connect('activate', self.__history_item_activated_cb,
-                              item)
+        def populate(history_list, palette):
+            for history_item in history_list:
+                menu_item = MenuItem(item.get_title(), text_maxlen=60)
+                menu_item.connect('activate', self.__history_item_activated_cb,
+                                  history_item)
+    
+                palette.menu.append(menu_item)
+                menu_item.show()
 
-            back_palette.menu.append(menu_item)
-            menu_item.show()
-
-        for item in list(history.get_forward_list_with_limit(limit)):
-            menu_item = MenuItem(item.get_title(), text_maxlen=60)
-            menu_item.connect('activate', self.__history_item_activated_cb,
-                              item)
-
-            forward_palette.menu.append(menu_item)
-            menu_item.show()
+        populate(history.get_back_list_with_limit(limit), back_palette)        
+        populate(history.get_forward_list_with_limit(limit), forward_palette)        
 
     def __history_item_activated_cb(self, menu_item, history_item):
         browser = self._tabbed_view.props.current_browser

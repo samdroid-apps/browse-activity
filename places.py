@@ -31,6 +31,15 @@ class Place(object):
         self.visits = 0
         self.last_visit = datetime.now()
 
+    @staticmethod
+    def from_row(row):
+        place = Place()
+
+        place.uri, place.title, place.bookmark, \
+            place.visits, place.last_visit = row
+
+        return place
+
 
 class SqliteStore(object):
     MAX_SEARCH_MATCHES = 20
@@ -95,7 +104,7 @@ class SqliteStore(object):
 
             row = cursor.fetchone()
             if row:
-                return self._place_from_row(row)
+                return Place.from_row(row)
             else:
                 return None
         finally:
@@ -112,14 +121,6 @@ class SqliteStore(object):
             self._connection.commit()
         finally:
             cursor.close()
-
-    def _place_from_row(self, row):
-        place = Place()
-
-        place.uri, place.title, place.bookmark, \
-            place.visits, place.last_visit = row
-
-        return place
 
     def _cleanup(self):
         cursor = self._connection.cursor()

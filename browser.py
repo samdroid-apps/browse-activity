@@ -189,7 +189,7 @@ class Browser(webkit.WebView):
     def __init__(self, activity_p):
         webkit.WebView.__init__(self)
 
-        self._activity_p = activity_p
+        self._activity = activity_p
         
         self._loaded = False # needed until webkitgtk 1.1.7+
         
@@ -211,7 +211,7 @@ class Browser(webkit.WebView):
         super(Browser, self).load_uri(uri)
 
     def __download_requested_cb(self, browser, download):
-        downloadmanager.process_download(download, self._activity_p)
+        downloadmanager.process_download(download, self._activity)
         return True
 
     def __mime_type_policy_cb(self, webview, frame, request, mimetype,
@@ -269,10 +269,7 @@ class Browser(webkit.WebView):
     def set_session(self, data):
         history = self.get_back_forward_list()
 
-        # webkitgtk+ v1.3.1+
-        #history.clear()
-
-        # temporary workaround to clear history
+        # HACK: workaround to clear history until webkitgtk 1.1.7+
         limit = history.get_limit()
         history.set_limit(0)
         history.set_limit(limit)
@@ -280,30 +277,11 @@ class Browser(webkit.WebView):
         for entry_dict in data:
             logging.debug('entry_dict: %r' % entry_dict)
 
-            entry = webkit.WebHistoryItem(entry_dict['url'], entry_dict['title'])
+            entry = webkit.WebHistoryItem(entry_dict['url'],
+                                          entry_dict['title'])
             history.add_item(entry)
 
         if data:
             self.go_to_back_forward_item(history.get_current_item())
         else:
             self.load_uri('about:blank')
-
-class PopupDialog(gtk.Window):
-    def __init__(self):
-        gtk.Window.__init__(self)
-
-        self.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
-
-        border = style.GRID_CELL_SIZE
-        self.set_default_size(gtk.gdk.screen_width() - border * 2,
-                              gtk.gdk.screen_height() - border * 2)
-
-        self.view = webkit.WebView()
-        self.view.connect('notify::visibility', self.__notify_visibility_cb)
-        self.add(self.view)
-        self.view.realize()
-
-    def __notify_visibility_cb(self, web_view, pspec):
-        if self.view.props.visibility:
-            self.view.show()
-            self.show()

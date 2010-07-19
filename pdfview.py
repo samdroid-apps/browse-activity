@@ -43,7 +43,7 @@ class PDFView(gtk.VBox):
     def __init__(self, path):
         super(PDFView, self).__init__()
 
-        self.uri = uri
+        self.path = path
         self._ev_view = _get_ev_view('file://' + path)
 
         self._toolbar = PDFToolbar(self._ev_view)

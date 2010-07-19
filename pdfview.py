@@ -32,14 +32,15 @@ def get_view(uri='file:///home/lucian/test.pdf'):
 
     return view
 
-win = gtk.Window(gtk.WINDOW_TOPLEVEL)
-win.set_size_request(400, 300)
-win.connect('destroy', gtk.main_quit)
-win.show()
+if __name__ == '__main__':
+    win = gtk.Window(gtk.WINDOW_TOPLEVEL)
+    win.set_size_request(400, 300)
+    win.connect('destroy', gtk.main_quit)
+    win.show()
 
-v = get_view()
+    v = get_view()
 
-win.add(v)
-v.show()
+    win.add(v)
+    v.show()
 
-gtk.main()
+    gtk.main()

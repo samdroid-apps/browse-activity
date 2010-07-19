@@ -408,17 +408,19 @@ class PrimaryToolbar(ToolbarBox):
             for menu_item in palette.menu.get_children():
                 palette.menu.remove(menu_item)
 
-        def populate(history_list, palette):
-            for history_item in history_list:
-                menu_item = MenuItem(history_item.get_title(), text_maxlen=60)
-                menu_item.connect('activate', self.__history_item_activated_cb,
-                                  history_item)
-    
-                palette.menu.append(menu_item)
-                menu_item.show()
+        self._populate_history_palette(
+            history.get_back_list_with_limit(limit), back_palette)        
+        self._populate_history_palette(
+            history.get_forward_list_with_limit(limit), forward_palette)        
 
-        populate(history.get_back_list_with_limit(limit), back_palette)        
-        populate(history.get_forward_list_with_limit(limit), forward_palette)        
+    def _populate_history_palette(self, history_list, palette):
+        for history_item in history_list:
+            menu_item = MenuItem(history_item.get_title(), text_maxlen=60)
+            menu_item.connect('activate', self.__history_item_activated_cb,
+                              history_item)
+    
+            palette.menu.append(menu_item)
+            menu_item.show()
 
     def __history_item_activated_cb(self, menu_item, history_item):
         browser = self._tabbed_view.props.current_browser

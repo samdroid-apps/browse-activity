@@ -40,11 +40,11 @@ def _get_ev_view(uri):
 class PDFView(gtk.VBox):
     __gtype_name__ = 'PDFView'
 
-    def __init__(self, uri):
+    def __init__(self, path):
         super(PDFView, self).__init__()
 
         self.uri = uri
-        self._ev_view = _get_ev_view(uri)
+        self._ev_view = _get_ev_view('file://' + path)
 
         self._toolbar = PDFToolbar(self._ev_view)
         self.pack_start(self._toolbar)
@@ -59,7 +59,7 @@ class PDFToolbar(gtk.Toolbar):
         
         self._ev_view = ev_view
 
-        self.journal = ToolButton('save')
+        self.journal = ToolButton('document-save')
         self.journal.set_tooltip(_('Save to Journal'))
         self.journal.connect('clicked', self.__journal_clicked_cb)
         self.insert(self.journal, -1)
@@ -99,7 +99,7 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         v = PDFView(sys.argv[1])
     else:
-        v = PDFView('file:///home/lucian/test.pdf')
+        v = PDFView('/home/lucian/test.pdf')
     v.show()
     
     win.add(v)

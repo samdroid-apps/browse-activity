@@ -22,7 +22,7 @@ import evince
 
 from sugar.graphics.toolbutton import ToolButton
 
-def _get_ev_view():
+def _get_ev_view(uri):
     view = evince.View()
 
     try: # assuming evince 2.30

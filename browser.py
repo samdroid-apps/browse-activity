@@ -72,7 +72,7 @@ class TabbedView(gtk.Notebook):
         settings = browser.get_settings()
 
         # improves browsing on some buggy websites
-        settings.set_property('enable-site-specific-quirks', True)
+        #settings.set_property('enable-site-specific-quirks', True)
 
         # enable full page zoom
         browser.set_full_content_zoom(True)

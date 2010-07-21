@@ -49,8 +49,11 @@ class PDFView(gtk.VBox):
         self._toolbar = PDFToolbar(self._ev_view)
         self.pack_start(self._toolbar)
         self._toolbar.show()
-
-        self.pack_start(self._ev_view)
+        
+        sw = gtk.ScrolledWindow()
+        sw.show()
+        sw.add(self._ev_view)
+        self.pack_start(sw)
         self._ev_view.show()
 
 class PDFToolbar(gtk.Toolbar):

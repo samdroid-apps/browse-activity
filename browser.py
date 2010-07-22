@@ -247,11 +247,12 @@ class Browser(webkit.WebView):
 
     def get_session(self):
         history = self.get_back_forward_list()
-        limit = history.get_limit()
 
-        back_list = history.get_back_list_with_limit(limit)
+        back_list = history.get_back_list_with_limit(
+                                    history.get_back_length())
         back_list.reverse()
-        forward_list = history.get_forward_list_with_limit(limit)
+        forward_list = history.get_forward_list_with_limit(
+                                    history.get_forward_length())
         forward_list.reverse()
 
         history_items = back_list + [history.get_current_item()] + \

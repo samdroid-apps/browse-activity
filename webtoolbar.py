@@ -397,9 +397,10 @@ class PrimaryToolbar(ToolbarBox):
             self._stop_and_reload.set_tooltip(_('Reload'))
 
     def _reload_session_history(self):
+        logging.debug('Updating history palettes.')
+
         browser = self._tabbed_view.props.current_browser
         history = browser.get_back_forward_list()
-        limit = history.get_limit()
 
         back_palette = self._back.get_palette()
         forward_palette = self._forward.get_palette()
@@ -408,12 +409,19 @@ class PrimaryToolbar(ToolbarBox):
             for menu_item in palette.menu.get_children():
                 palette.menu.remove(menu_item)
 
+
+        back_length = history.get_back_length()
+        forward_length = history.get_forward_length()
+
         self._populate_history_palette(
-            history.get_back_list_with_limit(limit), back_palette)        
+            history.get_back_list_with_limit(back_length),
+            back_palette)        
         self._populate_history_palette(
-            history.get_forward_list_with_limit(limit), forward_palette)        
+            history.get_forward_list_with_limit(forward_length),
+            forward_palette)        
 
     def _populate_history_palette(self, history_list, palette):
+        logging.debug('Populating a history palette.')
         for history_item in history_list:
             menu_item = MenuItem(history_item.get_title(), text_maxlen=60)
             menu_item.connect('activate', self.__history_item_activated_cb,

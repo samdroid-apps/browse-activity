@@ -85,48 +85,9 @@ def _seed_xs_cookie():
     cookie_data = {'color': profile.get_color().to_string(),
                    'pkey_hash': sha1.new(pubkey).hexdigest()}
 
-    db_path = os.path.join(_profile_path, 'cookies.sqlite')
-    try:
-        cookies_db = sqlite3.connect(db_path)
-        c = cookies_db.cursor()
+    # TODO set cookie for webkit
 
-        c.execute('''CREATE TABLE IF NOT EXISTS
-                     moz_cookies
-                     (id INTEGER PRIMARY KEY,
-                      name TEXT,
-                      value TEXT,
-                      host TEXT,
-                      path TEXT,
-                      expiry INTEGER,
-                      lastAccessed INTEGER,
-                      isSecure INTEGER,
-                      isHttpOnly INTEGER)''')
-
-        c.execute('''SELECT id
-                     FROM moz_cookies
-                     WHERE name=? AND host=? AND path=?''',
-                  ('xoid', jabber_server, '/'))
-
-        if c.fetchone():
-            _logger.debug('seed_xs_cookie: Cookie exists already')
-            return
-
-        expire = int(time.time()) + 10*365*24*60*60
-        c.execute('''INSERT INTO moz_cookies (name, value, host,
-                                              path, expiry, lastAccessed,
-                                              isSecure, isHttpOnly)
-                     VALUES(?,?,?,?,?,?,?,?)''',
-                  ('xoid', cjson.encode(cookie_data), jabber_server,
-                   '/', expire, 0, 0, 0 ))
-        cookies_db.commit()
-        cookies_db.close()
-    except sqlite3.Error, e:
-        _logger.error('seed_xs_cookie: %s' % e)
-    else:
-        _logger.debug('seed_xs_cookie: Updated cookie successfully')
-
-
-#TODO set app version and profile path
+#TODO set app version? and profile path
 
 def _set_accept_languages():
     ''' Set intl.accept_languages based on the locale

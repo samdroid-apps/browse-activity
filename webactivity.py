@@ -83,7 +83,7 @@ def _seed_xs_cookie():
 
     pubkey = profile.get_profile().pubkey
     cookie_data = {'color': profile.get_color().to_string(),
-                   'pkey_hash': sha1.new(pubkey).hexdigest()}
+                   'pkey_hash': sha1(pubkey).hexdigest()}
 
     # TODO set cookie for webkit
 
@@ -401,9 +401,9 @@ class WebActivity(activity.Activity):
         uri = browser.props.uri
 
         for link in self.model.data['shared_links']:
-            if link['hash'] == sha1.new(uri).hexdigest():
+            if link['hash'] == sha1(uri).hexdigest():
                 _logger.debug('_add_link: link exist already a=%s b=%s' %(
-                    link['hash'], sha1.new(uri).hexdigest()))
+                    link['hash'], sha1(uri).hexdigest()))
                 return
         buf = self._get_screenshot()
         timestamp = time.time()

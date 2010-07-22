@@ -49,7 +49,7 @@ class PDFView(gtk.VBox):
         self._toolbar = PDFToolbar(self._ev_view)
         self.pack_start(self._toolbar)
         self._toolbar.show()
-        
+
         sw = gtk.ScrolledWindow()
         sw.show()
         sw.add(self._ev_view)
@@ -59,7 +59,7 @@ class PDFView(gtk.VBox):
 class PDFToolbar(gtk.Toolbar):
     def __init__(self, ev_view):
         super(PDFToolbar, self).__init__()
-        
+
         self._ev_view = ev_view
 
         self.journal = ToolButton('document-save')
@@ -104,7 +104,7 @@ if __name__ == '__main__':
     else:
         v = PDFView('/home/lucian/test.pdf')
     v.show()
-    
+
     win.add(v)
     win.show_all()
 

@@ -17,7 +17,7 @@ msgstr ""
 "X-Generator: Translate Toolkit 1.0.1\n"
 
 #: activity/activity.info:2 webactivity.py:105
-msgid "Browse"
+msgid "Surf"
 msgstr "Flakka"
 
 #: browser.py:132

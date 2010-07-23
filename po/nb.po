@@ -18,7 +18,7 @@ msgstr ""
 #: activity/activity.info:2
 #: webactivity.py:113
 #, fuzzy
-msgid "Browse"
+msgid "Surf"
 msgstr "Surfe"
 
 #: browser.py:149

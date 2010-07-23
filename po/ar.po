@@ -20,7 +20,7 @@ msgstr ""
 "X-Generator: Pootle 1.2.1\n"
 
 #: activity/activity.info:2
-msgid "Browse"
+msgid "Surf"
 msgstr "تصفّح"
 
 #: downloadmanager.py:153

@@ -17,7 +17,7 @@ msgstr ""
 "X-Generator: Translate Toolkit 1.1.1rc4\n"
 
 #: activity/activity.info:2 webactivity.py:106
-msgid "Browse"
+msgid "Surf"
 msgstr ""
 
 #: downloadmanager.py:152

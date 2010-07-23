@@ -18,7 +18,7 @@ msgstr ""
 "X-Poedit-Language: Spanish\n"
 
 #: activity/activity.info:2 webactivity.py:106
-msgid "Browse"
+msgid "Surf"
 msgstr "Navegar"
 
 #: downloadmanager.py:152

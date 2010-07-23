@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: activity/activity.info:2 webactivity.py:83
-msgid "Browse"
+msgid "Surf"
 msgstr "[ҳﯽ Сیपżل Ƶ Հҟ]Вҕօաیэ"
 
 #: browser.py:133

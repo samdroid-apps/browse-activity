@@ -17,7 +17,7 @@ msgstr ""
 
 #: activity/activity.info:2
 #: webactivity.py:113
-msgid "Browse"
+msgid "Surf"
 msgstr "వెబ్ చూడు"
 
 #: browser.py:149

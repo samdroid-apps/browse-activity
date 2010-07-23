@@ -16,7 +16,7 @@ msgstr ""
 "X-Generator: Pootle 1.1.0rc2\n"
 
 #: activity/activity.info:2 webactivity.py:113
-msgid "Browse"
+msgid "Surf"
 msgstr "Nabega"
 
 #: browser.py:149
